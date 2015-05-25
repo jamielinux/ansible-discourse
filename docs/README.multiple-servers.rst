@@ -2,8 +2,8 @@
 Multiple server configuration
 *****************************
 
-It’s best to run PostgreSQL on it’s own server, as it doesn’t like memory
-pressure. It’s also possible to run Redis on a separate server.
+It’s best to run PostgreSQL on a separate server, as PostgreSQL doesn’t like
+memory pressure. (It’s also possible to run Redis on a separate server.)
 
 Example
 =======
