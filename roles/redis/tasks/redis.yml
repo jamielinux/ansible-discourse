@@ -14,10 +14,10 @@
     update_cache: True
     state: "present"
 
-- name: "install /etc/redis.conf"
+- name: "install redis.conf"
   template:
     src: "redis.conf.j2"
-    dest: "/etc/redis.conf"
+    dest: "{{ redis_config }}"
     owner: "root"
     group: "root"
     mode: "0644"
@@ -29,3 +29,4 @@
     name: "{{ redis_service }}"
     enabled: True
     state: "started"
+
