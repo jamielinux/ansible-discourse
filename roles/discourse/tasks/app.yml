@@ -125,3 +125,16 @@
     group: "root"
     mode: "0644"
 
+- name: "install plugins"
+  when: discourse_plugins is defined
+  git:
+    repo: "{{ item.repo }}"
+    dest: "/var/www/discourse/plugins/{{ item.name }}"
+    version: "{{ item.version }}"
+    update: True
+    force: True
+  sudo_user: "discourse"
+  with_items: discourse_plugins
+  notify:
+    - "reload discourse-unicorn"
+

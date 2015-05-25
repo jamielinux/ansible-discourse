@@ -136,3 +136,5 @@ Advanced configuration
 * `run PostgreSQL (and/or Redis) on a separate server
   <docs/README.multiple-servers.rst>`_
 
+* `install Discourse plugins <docs/README.plugins.rst>`_
+
