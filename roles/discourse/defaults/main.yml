@@ -1,0 +1,41 @@
+---
+
+rbenv_ruby_version:           "2.2.2"
+
+discourse_hostname:           "discourse.example.com"
+discourse_developer_emails:   ["hello@example.com"]
+
+# This can be any git commit hash, branch or tag.
+discourse_version:            "latest-release"
+
+discourse_unicorn_workers:    "2"
+discourse_unicorn_sidekiqs:   "1"
+
+# If left as the default 'localhost', postfix and opendkim will be installed.
+# See <docs/README.mail.rst> for instructions.
+discourse_smtp_address:       "localhost"
+discourse_smtp_port:          "25"
+discourse_smtp_username:      ""
+discourse_smtp_password:      ""
+discourse_smtp_auth:          "plain"
+discourse_smtp_start_tls:     "true"
+
+# Postgres can be run on a separate host <docs/README.multiple-servers.rst>.
+discourse_db_host:            ""
+discourse_db_port:            "5432"
+discourse_db_password:        "{{ postgres_password }}"
+
+discourse_redis_host:         "127.0.0.1"
+discourse_redis_port:         "6379"
+discourse_redis_db:           "0"
+discourse_redis_password:     ""
+discourse_asset_redis_url:    ""
+
+# If True, an Access-Control-Allow-Origin header will be served.
+discourse_cdn_enabled:        False
+discourse_cdn_allow_origin:   "*"
+discourse_cdn_url:            ""
+
+# Show output from bundle and rake commands.
+discourse_verbose:            True
+

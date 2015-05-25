@@ -1,0 +1,36 @@
+---
+
+- name: "create rbenv user"
+  user:
+    name: "{{ rbenv_user }}"
+    home: "{{ rbenv_home }}"
+    shell: "/bin/bash"
+
+- name: "set BASH profile"
+  when: ansible_os_family == "RedHat"
+  set_fact:
+    bash_profile: ".bash_profile"
+
+- name: "set BASH profile"
+  when: ansible_os_family == "Debian"
+  set_fact:
+    bash_profile: ".profile"
+
+- name: "export PATH"
+  lineinfile:
+    dest: "{{ rbenv_home }}/{{ bash_profile }}"
+    line: "export PATH"
+    insertafter: "EOF"
+
+- name: "set PATH=$HOME/.rbenv/bin:$PATH"
+  lineinfile:
+    dest: "{{ rbenv_home }}/{{ bash_profile }}"
+    line: "PATH=$HOME/.rbenv/bin:$PATH"
+    insertbefore: "^export PATH$"
+
+- name: "enable shims and autocompletion"
+  lineinfile:
+    dest: "{{ rbenv_home }}/{{ bash_profile }}"
+    line: 'eval "$(rbenv init -)"'
+    insertafter: "EOF"
+

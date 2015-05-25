@@ -1,0 +1,5 @@
+---
+
+postfix_hostname:             "{{ discourse_hostname }}"
+dkim_enabled:                 False
+

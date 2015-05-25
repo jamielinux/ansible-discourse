@@ -1,0 +1,19 @@
+# vim: filetype=pfmain
+
+myhostname = {{ postfix_hostname }}
+inet_interfaces = localhost
+inet_protocols = all
+mydestination = $myhostname, localhost.$mydomain, localhost
+header_checks = regexp:/etc/postfix/header_checks
+
+# opportunistic TLS between servers
+smtp_tls_security_level = may
+
+{% if dkim_enabled %}
+# DKIM
+milter_default_action = accept
+milter_protocol = 2
+smtpd_milters = inet:localhost:8891
+non_smtpd_milters = inet:localhost:8891
+{% endif %}
+

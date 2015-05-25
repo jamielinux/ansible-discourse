@@ -1,0 +1,17 @@
+# PostgreSQL Client Authentication Configuration File
+# ===================================================
+
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+local   replication     postgres                                peer
+local   all             postgres                                peer
+host    all             postgres        127.0.0.1/32            md5
+host    all             postgres        ::1/128                 md5
+
+local   all             all                                     md5
+host    all             all             127.0.0.1/32            md5
+host    all             all             ::1/128                 md5
+{% for address in postgres_hosts_allow %}
+{% if address != '' %}
+host    all             all             {{ address }} md5
+{% endif %}
+{% endfor %}

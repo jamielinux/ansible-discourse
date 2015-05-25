@@ -1,0 +1,27 @@
+---
+
+- name: "create discourse user"
+  user:
+    name: "discourse"
+    home: "/home/discourse"
+
+- name: "install gemrc"
+  copy:
+    src: "gemrc"
+    dest: "/home/discourse/.gemrc"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0644"
+
+- name: "export PATH"
+  lineinfile:
+    dest: "/home/discourse/{{ bash_profile }}"
+    line: "export PATH"
+    insertafter: "EOF"
+
+- name: "set PATH=$HOME/node_modules/.bin:$PATH"
+  lineinfile:
+    dest: "/home/discourse/{{ bash_profile }}"
+    line: "PATH=$HOME/node_modules/.bin:$PATH"
+    insertbefore: "^export PATH$"
+

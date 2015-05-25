@@ -1,0 +1,53 @@
+---
+
+- name: "unbound"
+  hosts: "all"
+  sudo: True
+  gather_facts: True
+
+  roles:
+    - role: "unbound"
+      tags: ["unbound"]
+
+
+- name: "discourse-postgres"
+  hosts: "postgres"
+  sudo: True
+  gather_facts: True
+
+  roles:
+    - role: "discourse-postgres"
+      tags: ["discourse-postgres"]
+
+
+- name: "redis"
+  hosts: "redis"
+  sudo: True
+  gather_facts: True
+
+  roles:
+    - role: "redis"
+      tags: ["redis"]
+
+
+- name: "discourse"
+  hosts: "discourse"
+  sudo: True
+  gather_facts: True
+
+  roles:
+    - role: 'discourse'
+      tags: ['discourse']
+
+    - role: "discourse-nginx"
+      tags: ["discourse-nginx"]
+
+    - role: "opendkim"
+      tags: ["opendkim"]
+      when: discourse_smtp_address == 'localhost' and dkim_enabled
+
+    - role: "postfix"
+      tags: ["postfix"]
+      when: discourse_smtp_address == 'localhost'
+
+

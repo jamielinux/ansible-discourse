@@ -1,0 +1,45 @@
+---
+
+- name: "increase net.core.somaxconn"
+  sysctl:
+    name: "net.core.somaxconn"
+    value: "{{ redis_tcp_backlog }}"
+    sysctl_set: True
+    reload: True
+
+- name: "increase net.ipv4.tcp_max_syn_backlog"
+  sysctl:
+    name: "net.ipv4.tcp_max_syn_backlog"
+    value: "{{ redis_tcp_backlog }}"
+    sysctl_set: True
+    reload: True
+
+- name: "always overcommit memory"
+  sysctl:
+    name: "vm.overcommit_memory"
+    value: "1"
+    sysctl_set: True
+    reload: True
+
+# When running redis, it"s recommended to disable transparent huge pages.
+# The best way to disable it is to append "transparent_hugepage: never" to
+# the kernel cmdline, but there isn"t a robust way to do that with Ansible
+# so instead we"ll run a boot script.
+- name: "disable transparent huge pages"
+  copy:
+    src: "disable-transparent-huge-pages.service"
+    dest: "/etc/systemd/system/disable-transparent-huge-pages.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "systemctl daemon-reload"
+  command: "/bin/systemctl daemon-reload"
+  changed_when: False
+
+- name: "enable and start disable-transparent-huge-pages"
+  service:
+    name: "disable-transparent-huge-pages"
+    enabled: True
+    state: "started"
+

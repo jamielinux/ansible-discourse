@@ -1,0 +1,39 @@
+# See unbound.conf(5) man page.
+
+server:
+    outgoing-port-permit: 32768-65535
+    outgoing-port-avoid: 0-32767
+    chroot: ""
+
+{% if unbound_log_queries %}
+    log-queries: yes
+{% endif %}
+{% if unbound_harden_below_nx %}
+    harden-below-nxdomain: yes
+{% endif %}
+{% if unbound_harden_referral_path %}
+    harden-referral-path: yes
+{% endif %}
+{% if unbound_use_caps_for_id %}
+    use-caps-for-id: yes
+{% endif %}
+
+    # Protect against DNS rebinding attacks.
+    private-address: 0.0.0.0/8
+    private-address: 10.0.0.0/8
+    private-address: 172.16.0.0/12
+    private-address: 192.168.0.0/16
+    private-address: fc00::/7
+    private-address: fe80::/10
+
+{% for private_address in unbound_private_addresses %}
+    private-address: {{ private_address }}
+{% endfor %}
+
+{% for private_domain in unbound_private_domains %}
+    private-domain: "{{ private_domain }}"
+{% endfor %}
+
+    unwanted-reply-threshold: 10000000
+    auto-trust-anchor-file: "/var/lib/unbound/root.key"
+

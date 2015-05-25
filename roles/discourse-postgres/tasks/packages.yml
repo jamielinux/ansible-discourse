@@ -1,0 +1,70 @@
+---
+
+# CentOS 7 is stuck on version 9.2.x.
+- name: "install jamielinux-postgresql94 repository"
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+  template:
+    src: "jamielinux-postgresql94.repo.j2"
+    dest: "/etc/yum.repos.d/jamielinux-postgresql94.repo"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "install GPG key"
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+  copy:
+    src: "RPM-GPG-KEY-jamielinux-postgresql94"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-postgresql94"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "check if GPG key has been imported"
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+  command: "/usr/bin/rpm -qa gpg-pubkey"
+  register: "rpm_pubkeys"
+  changed_when: False
+
+- name: "import GPG key"
+  when: >
+    ( ansible_os_family == "RedHat" and ansible_distribution_major_version == "7" )
+    and ( "gpg-pubkey-32f41635-556075ee" not in rpm_pubkeys.stdout )
+  command: "/usr/bin/rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-postgresql94"
+
+- name: "install packages"
+  when: ansible_os_family == "RedHat"
+  yum:
+    name: "{{ item }}"
+    update_cache: True
+    state: "present"
+  with_items:
+    - "postgresql-contrib"
+    - "postgresql-devel"
+    - "postgresql-server"
+    - "python-psycopg2"
+
+- name: "install packages"
+  when: ansible_os_family == "Debian"
+  apt:
+    name: "{{ item }}"
+    update_cache: True
+    state: "present"
+  with_items:
+    - "postgresql"
+  register: install_postgresql
+
+- name: "drop default cluster"
+  when: install_postgresql.changed
+  command: "/usr/bin/pg_dropcluster --stop {{ postgres_version }} main"
+
+- name: "install packages"
+  when: ansible_os_family == "Debian"
+  apt:
+    name: "{{ item }}"
+    update_cache: True
+    state: "present"
+  with_items:
+    - "postgresql-contrib"
+    - "postgresql-server-dev-all"
+    - "python-psycopg2"
+

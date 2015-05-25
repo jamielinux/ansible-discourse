@@ -1,0 +1,22 @@
+---
+
+- include: "facts.yml"
+  tags: "always"
+
+- include: "packages.yml"
+  tags: "nginx-packages"
+
+- include: "configs.yml"
+  tags: "nginx-configs"
+
+- include: "pki.yml"
+  tags: "nginx-pki"
+  when: tls_enabled
+
+- include: "selinux.yml"
+  tags: "nginx-selinux"
+  when: ansible_selinux.status != "disabled"
+
+- include: "services.yml"
+  tags: "nginx-services"
+

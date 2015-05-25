@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ "$USER" = 'discourse' ]; then
+    cd /var/www/discourse || exit 1
+    RAILS_ENV=production /home/discourse/.rbenv/shims/bundle exec \
+        script/discourse "$@"
+else
+    /usr/bin/sudo -H -i -u discourse -- "$0" "$@"
+fi

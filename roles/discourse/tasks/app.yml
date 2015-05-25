@@ -1,0 +1,119 @@
+---
+
+- name: "create /var/www/discourse directory"
+  file:
+    dest: "/var/www/discourse"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0755"
+    state: "directory"
+
+- name: "set SELinux file context for /var/www/discourse directory"
+  file:
+    dest: "/var/www/discourse"
+    seuser: "staff_u"
+    serole: "object_r"
+    setype: "httpd_sys_content_t"
+    selevel: "s0"
+
+- name: "https://github.com/discourse/discourse.git"
+  git:
+    repo: "https://github.com/discourse/discourse.git"
+    dest: "/var/www/discourse"
+    version: "{{ discourse_version }}"
+    update: True
+    force: True
+  sudo_user: "discourse"
+  notify:
+    - "reload discourse-unicorn"
+
+- name: "set SELinux file context for /var/www/discourse/log directory"
+  file:
+    dest: "/var/www/discourse/log"
+    seuser: "staff_u"
+    serole: "object_r"
+    setype: "var_log_t"
+    selevel: "s0"
+
+- name: "install discourse.conf"
+  template:
+    src: "discourse.conf.j2"
+    dest: "/var/www/discourse/config/discourse.conf"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0644"
+  notify:
+    - "reload discourse-unicorn"
+
+- name: "create /var/www/discourse/log/rails directory"
+  file:
+    dest: "/var/www/discourse/log/rails"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0755"
+    state: "directory"
+
+- name: "set SELinux file context for /var/www/discourse/log/rails directory"
+  file:
+    dest: "/var/www/discourse/log/rails"
+    seuser: "staff_u"
+    serole: "object_r"
+    setype: "var_log_t"
+    selevel: "s0"
+
+- name: "create /var/www/discourse/public/backups directory"
+  file:
+    dest: "/var/www/discourse/public/backups"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0755"
+    state: "directory"
+
+- name: "create /var/www/discourse/tmp/pids directory"
+  file:
+    dest: "/var/www/discourse/tmp/pids"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0755"
+    state: "directory"
+
+- name: "create /var/www/discourse/tmp/sockets directory"
+  file:
+    dest: "/var/www/discourse/tmp/sockets"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0755"
+    state: "directory"
+
+- name: "install /usr/local/bin/discourse"
+  copy:
+    src: "discourse"
+    dest: "/usr/local/bin/discourse"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: "install /usr/local/bin/discourse-rails"
+  copy:
+    src: "discourse-rails"
+    dest: "/usr/local/bin/discourse-rails"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: "install /usr/local/bin/discourse-rake"
+  copy:
+    src: "discourse-rake"
+    dest: "/usr/local/bin/discourse-rake"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: "install /etc/logrotate.d/discourse"
+  copy:
+    src: "discourse.logrotate"
+    dest: "/etc/logrotate.d/discourse"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+

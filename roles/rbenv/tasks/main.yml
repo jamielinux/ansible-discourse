@@ -1,0 +1,11 @@
+---
+
+- include: "user.yml"
+  tags: "rbenv-user"
+
+- include: "packages.yml"
+  tags: "rbenv-packages"
+
+- include: "ruby.yml"
+  tags: "rbenv-ruby"
+

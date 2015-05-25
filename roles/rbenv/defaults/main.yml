@@ -1,0 +1,23 @@
+---
+
+rbenv_version:                "HEAD"
+rbenv_ruby_build_version:     "v20150519"
+
+# Where rbenv will be installed to.
+rbenv_home:                   "/home/{{ rbenv_user }}"
+
+# Prevent rbenv from using up system resources when building ruby.
+rbenv_make_opt:               "-j1"
+
+# There are a few additional variables that are intended to be declared either
+# when calling the role, or in group_vars or host_vars.
+
+# Mandatory:
+#  * "rbenv_user" is the user account to install to.
+#  * "rbenv_ruby_version" should be a Ruby version string.
+
+# Optional:
+#  * "rbenv_reload" is a list of services to reload on updates.
+#  * "rbenv_restart" is a list of services to restart on updates.
+
+

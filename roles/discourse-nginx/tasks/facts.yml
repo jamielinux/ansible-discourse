@@ -1,0 +1,12 @@
+---
+
+- name: "set nginx user"
+  when: ansible_os_family == "RedHat"
+  set_fact:
+    nginx_user: "nginx"
+
+- name: "set nginx user"
+  when: ansible_os_family == "Debian"
+  set_fact:
+    nginx_user: "www-data"
+

@@ -1,0 +1,12 @@
+---
+
+- name: "set OS-specific facts"
+  when: ansible_os_family == "RedHat"
+  set_fact:
+    redis_service: "redis.service"
+
+- name: "set OS-specific facts"
+  when: ansible_os_family == "Debian"
+  set_fact:
+    redis_service: "redis-server.service"
+

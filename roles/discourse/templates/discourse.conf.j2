@@ -1,0 +1,32 @@
+# discourse.conf
+
+hostname = {{ discourse_hostname }}
+developer_emails = {% for email in discourse_developer_emails %}{{ email }}{% if not loop.last %},{% endif %}{% endfor %}
+
+
+# SMTP
+smtp_address = {{ discourse_smtp_address }}
+smtp_port = {{ discourse_smtp_port }}
+smtp_user_name = {{ discourse_smtp_username }}
+smtp_password = {{ discourse_smtp_password }}
+smtp_authentication = {{ discourse_smtp_auth }}
+smtp_enable_start_tls = {{ discourse_smtp_start_tls }}
+
+# PostgreSQL
+db_host = {{ discourse_db_host }}
+db_port = {{ discourse_db_port }}
+db_name = discourse
+db_username = discourse
+db_password = {{ discourse_db_password }}
+
+# Redis
+redis_host = {{ discourse_redis_host }}
+redis_port = {{ discourse_redis_port }}
+redis_db = {{ discourse_redis_db }}
+redis_password = {{ discourse_redis_password }}
+asset_redis_url = {{ discourse_asset_redis_url }}
+
+{% if discourse_cdn_enabled %}
+# CDN
+cdn_url = {{ discourse_cdn_url }}
+{% endif %}

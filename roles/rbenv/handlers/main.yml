@@ -1,0 +1,16 @@
+---
+
+- name: "reload services"
+  when: rbenv_reload is defined
+  service:
+    name: "{{ item }}"
+    state: "reloaded"
+  with_items: rbenv_reload
+
+- name: "restart services"
+  when: rbenv_restart is defined
+  service:
+    name: "{{ item }}"
+    state: "restarted"
+  with_items: rbenv_restart
+

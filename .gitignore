@@ -1,0 +1,8 @@
+# DKIM private key
+/files/dkim/*.private
+
+# Ignore any custom playbooks
+/*.yml
+!/master.yml
+!/vars_example.yml
+!/vars_ssl_example.yml

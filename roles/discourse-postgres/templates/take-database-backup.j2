@@ -1,0 +1,6 @@
+#!/bin/sh
+ID="db-`date +%F_%T`"
+FILENAME="{{ postgres_backups }}/${ID}.tar.gz"
+/usr/bin/pg_basebackup \
+    --format=tar --pgdata=- --xlog --gzip --label="$ID" > "$FILENAME"
+

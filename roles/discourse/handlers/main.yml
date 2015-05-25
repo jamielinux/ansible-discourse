@@ -1,0 +1,22 @@
+---
+
+- name: "record asset precompilation"
+  copy:
+    content: "{{ current_precompilation.stdout }}"
+    dest: "/var/www/discourse/log/ansible.last_precompilation"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0644"
+
+- name: "reload discourse-unicorn"
+  when: not start_discourse_unicorn.changed
+  service:
+    name: "discourse-unicorn.service"
+    state: "reloaded"
+
+- name: "restart discourse-unicorn"
+  when: not start_discourse_unicorn.changed
+  service:
+    name: "discourse-unicorn.service"
+    state: "restarted"
+

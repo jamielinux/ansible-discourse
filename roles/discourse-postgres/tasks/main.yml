@@ -1,0 +1,14 @@
+---
+
+- include: "facts.yml"
+  tags: "always"
+
+- include: "packages.yml"
+  tags: "postgres-packages"
+
+- include: "initdb.yml"
+  tags: "postgres-initdb"
+
+- include: "discourse.yml"
+  tags: "postgres-discourse"
+

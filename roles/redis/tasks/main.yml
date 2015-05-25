@@ -1,0 +1,11 @@
+---
+
+- include: "facts.yml"
+  tags: "always"
+
+- include: "redis.yml"
+  tags: "redis-redis"
+
+- include: "optimize.yml"
+  tags: "redis-optimize"
+

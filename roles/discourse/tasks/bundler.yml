@@ -1,0 +1,70 @@
+---
+
+- name: "check if bundler is installed"
+  command: "/home/discourse/.rbenv/shims/gem list --installed bundler --quiet"
+  sudo_user: "discourse"
+  register: gem_list_bundler
+  ignore_errors: True
+  changed_when: False
+  
+- name: "gem install bundler"
+  when: gem_list_bundler.rc != 0
+  command: "/home/discourse/.rbenv/shims/gem install bundler"
+  sudo_user: "discourse"
+  register: gem_install_bundler
+
+- name: "gem update bundler"
+  when: not gem_install_bundler.changed
+  command: "/home/discourse/.rbenv/shims/gem update bundler"
+  sudo_user: "discourse"
+  register: gem_update_bundler
+  changed_when: "'Nothing to update' not in gem_update_bundler.stdout"
+
+- name: "rbenv rehash"
+  command: "/home/discourse/.rbenv/bin/rbenv rehash"
+  sudo_user: "discourse"
+  changed_when: False
+
+- name: "determine currently installed gems"
+  command: "/home/discourse/.rbenv/shims/bundle show --no-color"
+  args:
+    chdir: "/var/www/discourse"
+  sudo_user: "discourse"
+  ignore_errors: True
+  changed_when: False
+  register: bundle_install_pre
+
+- name: "bundle install"
+  command: >
+    /usr/bin/ionice -c 3 /usr/bin/nice -n 19
+    /home/discourse/.rbenv/shims/bundle install --verbose
+    --deployment --without test --without development
+    --binstubs=/home/discourse/bin --jobs=1
+  args:
+    chdir: "/var/www/discourse"
+  sudo_user: "discourse"
+  register: bundle_install
+  changed_when: False
+
+- name: "stdout from `bundle install`"
+  when: discourse_verbose
+  debug:
+    var: bundle_install.stdout_lines
+  changed_when: False
+
+- name: "stderr from `bundle install`"
+  when: discourse_verbose
+  debug:
+    var: bundle_install.stderr.split('\n')
+  changed_when: False
+
+- name: "check if `bundle install` made any changes"
+  command: "/home/discourse/.rbenv/shims/bundle show --no-color"
+  args:
+    chdir: "/var/www/discourse"
+  sudo_user: "discourse"
+  register: bundle_install_post
+  changed_when: "bundle_install_pre.stdout != bundle_install_post.stdout"
+  notify:
+    - "reload discourse-unicorn"
+

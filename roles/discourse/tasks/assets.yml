@@ -1,0 +1,63 @@
+---
+
+- name: "check if asset precompilation log file exists"
+  stat:
+    path: "/var/www/discourse/log/ansible.last_precompilation"
+  changed_when: False
+  register: precompilation_log
+
+- name: "check when last asset precompilation was run"
+  when: precompilation_log.stat.exists
+  command: >
+    /usr/bin/head -c 40
+    /var/www/discourse/log/ansible.last_precompilation
+  changed_when: False
+  register: last_precompilation
+
+- name: "check for new assets"
+  command: >
+    /usr/bin/git log -1 --pretty=format:%H --
+    ./app/assets/ ./lib/assets/ ./vendor/assets/ ./lib/tasks/assets.rb
+  args:
+    chdir: "/var/www/discourse"
+  changed_when: False
+  register: current_precompilation
+
+- name: "create /var/www/discourse/public/assets directory"
+  file:
+    dest: "/var/www/discourse/public/assets"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0755"
+    state: "directory"
+
+- name: "rake assets:precompile"
+  command: >
+    /usr/bin/ionice -c 3 /usr/bin/nice -n 19
+    /home/discourse/.rbenv/shims/bundle exec rake assets:precompile
+  args:
+    chdir: "/var/www/discourse"
+  environment:
+    RACK_ENV: "production"
+    PATH: "/home/discourse/node_modules/.bin:{{ ansible_env.PATH }}"
+  sudo_user: "discourse"
+  register: rake_assets_precompile
+  changed_when: >
+    not precompilation_log.stat.exists
+    or ( current_precompilation.stdout != last_precompilation.stdout )
+  notify:
+    - "record asset precompilation"
+    - "reload discourse-unicorn"
+
+- name: "stdout from `rake assets:precompile`"
+  when: discourse_verbose
+  debug:
+    var: rake_assets_precompile.stdout_lines
+  changed_when: False
+
+- name: "stderr from `rake assets:precompile`"
+  when: discourse_verbose
+  debug:
+    var: rake_assets_precompile.stderr.split('\n')
+  changed_when: False
+

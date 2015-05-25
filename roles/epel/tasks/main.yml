@@ -1,0 +1,6 @@
+---
+
+- name: "install EPEL repository"
+  when: ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux"
+  script: "bootstrap-epel-{{ ansible_distribution_major_version }}-repo.sh creates=/etc/yum.repos.d/epel.repo"
+

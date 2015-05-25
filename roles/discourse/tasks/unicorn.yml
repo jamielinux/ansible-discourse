@@ -1,0 +1,45 @@
+---
+
+- name: "install /usr/local/bin/discourse-unicorn-reload.sh"
+  copy:
+    src: "discourse-unicorn-reload.sh"
+    dest: "/usr/local/bin/discourse-unicorn-reload.sh"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: "install discourse-unicorn-env"
+  template:
+    src: "discourse-unicorn-env.j2"
+    dest: "{{ sysconfig_directory }}/discourse-unicorn-env"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - "restart discourse-unicorn"
+
+- name: "install discourse-unicorn.service"
+  template:
+    src: "discourse-unicorn.service.j2"
+    dest: "/etc/systemd/system/discourse-unicorn.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - "restart discourse-unicorn"
+
+- name: "systemctl daemon-reload"
+  command: "/bin/systemctl daemon-reload"
+  changed_when: False
+
+- name: "enable discourse-unicorn.service"
+  service:
+    name: "discourse-unicorn.service"
+    enabled: True
+
+- name: "start discourse-unicorn.service"
+  service:
+    name: "discourse-unicorn.service"
+    state: "started"
+  register: start_discourse_unicorn
+

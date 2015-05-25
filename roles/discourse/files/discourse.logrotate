@@ -1,0 +1,14 @@
+/var/www/discourse/log/*.log /var/www/discourse/log/rails/*.log {
+    daily
+    dateext
+    rotate 32
+    compress
+    delaycompress
+    notifempty
+    missingok
+    sharedscripts
+    create 0644 discourse discourse
+    postrotate
+        /bin/systemctl kill --kill-who=main --signal=SIGUSR1 discourse-unicorn.service || :
+    endscript
+}

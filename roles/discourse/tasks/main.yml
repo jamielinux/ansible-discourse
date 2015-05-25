@@ -1,0 +1,29 @@
+---
+
+- include: "facts.yml"
+  tags: "always"
+
+- include: "user.yml"
+  tags: "discourse-user"
+
+- include: "packages.yml"
+  tags: "discourse-packages"
+
+- include: "app.yml"
+  tags: "discourse-app"
+
+- include: "bundler.yml"
+  tags: "discourse-bundler"
+
+- include: "npm.yml"
+  tags: "discourse-npm"
+
+- include: "db.yml"
+  tags: "discourse-db"
+
+- include: "assets.yml"
+  tags: "discourse-assets"
+
+- include: "unicorn.yml"
+  tags: "discourse-unicorn"
+

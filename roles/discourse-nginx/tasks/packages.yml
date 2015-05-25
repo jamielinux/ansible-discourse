@@ -1,0 +1,47 @@
+---
+
+# CentOS 7 is stuck on version 1.6.x.
+- name: "install jamielinux-nginx-stable repository"
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+  template:
+    src: "jamielinux-nginx-stable.repo.j2"
+    dest: "/etc/yum.repos.d/jamielinux-nginx-stable.repo"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "install GPG key"
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+  copy:
+    src: "RPM-GPG-KEY-jamielinux-nginx-stable"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-nginx-stable"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "check if GPG key has been imported"
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+  command: "/usr/bin/rpm -qa gpg-pubkey"
+  register: "rpm_pubkeys"
+  changed_when: False
+
+- name: "import GPG key"
+  when: >
+    ( ansible_os_family == "RedHat" and ansible_distribution_major_version == "7" )
+    and ( "gpg-pubkey-f06d0959-555da912" not in rpm_pubkeys.stdout )
+  command: "/usr/bin/rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-nginx-stable"
+
+- name: "install nginx"
+  when: ansible_os_family == "RedHat"
+  yum:
+    name: "nginx"
+    update_cache: True
+    state: "present"
+
+- name: "install nginx"
+  when: ansible_os_family == "Debian"
+  apt:
+    name: "nginx"
+    update_cache: True
+    state: "present"
+

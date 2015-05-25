@@ -1,0 +1,80 @@
+---
+
+- name: "create PostgreSQL password file"
+  template:
+    src: "pgpass.j2"
+    dest: "/home/discourse/.pgpass"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0600"
+
+- name: "check if last db migration log exists"
+  stat: path="/var/www/discourse/log/ansible.last_migration.log"
+  changed_when: False
+  register: migration_log
+
+- name: "set psql_host"
+  when: discourse_db_host == ""
+  set_fact:
+    psql_host: ""
+
+- name: "set psql_host"
+  when: discourse_db_host != ""
+  set_fact:
+    psql_host: "-h {{ discourse_db_host }}"
+
+- name: "check if schema_migrations table exists"
+  command: >
+    /usr/bin/psql discourse {{ psql_host }} -c
+    "COPY ( SELECT EXISTS (
+    SELECT 1 FROM pg_tables WHERE tablename='schema_migrations'
+    ) ) TO STDOUT;"
+  changed_when: False
+  sudo_user: "discourse"
+  register: schema_migrations_exists
+
+- name: "check total number of executed migrations before"
+  when: schema_migrations_exists.stdout == "t"
+  command: >
+    /usr/bin/psql discourse {{ psql_host }} -c
+    "COPY (
+    SELECT COUNT(*) FROM schema_migrations
+    ) TO STDOUT;"
+  changed_when: False
+  sudo_user: "discourse"
+  register: executed_migrations_before
+
+- name: "rake db:migrate"
+  command: "/home/discourse/.rbenv/shims/bundle exec rake db:migrate"
+  args:
+    chdir: "/var/www/discourse"
+  environment:
+    RACK_ENV: "production"
+  sudo_user: "discourse"
+  register: rake_db_migrate
+  changed_when: schema_migrations_exists.stdout != "t"
+
+- name: "stdout from `rake db:migrate`"
+  when: discourse_verbose
+  debug:
+    var: rake_db_migrate.stdout_lines
+  changed_when: False
+
+- name: "stderr from `rake db:migrate`"
+  when: discourse_verbose
+  debug:
+    var: rake_db_migrate.stderr.split('\n')
+  changed_when: False
+
+- name: "check if any migrations were executed"
+  command: >
+    /usr/bin/psql discourse {{ psql_host }} -c
+    "COPY (
+    SELECT COUNT(*) FROM schema_migrations
+    ) TO STDOUT;"
+  sudo_user: "discourse"
+  register: executed_migrations_after
+  changed_when: > 
+    schema_migrations_exists.stdout != "t"
+    or ( executed_migrations_after.stdout > executed_migrations_before.stdout )
+

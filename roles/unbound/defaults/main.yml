@@ -1,0 +1,9 @@
+---
+
+unbound_log_queries:          False
+unbound_harden_below_nx:      False
+unbound_harden_referral_path: False
+unbound_use_caps_for_id:      False
+unbound_private_addresses:    []
+unbound_private_domains:      []
+

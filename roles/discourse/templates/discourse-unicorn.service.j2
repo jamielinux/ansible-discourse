@@ -1,0 +1,22 @@
+[Unit]
+Description=Discourse Unicorn Server
+After=redis.service postgresql.service
+
+
+[Service]
+Type=simple
+KillMode=mixed
+TimeoutStopSec=5
+PIDFile=/var/www/discourse/tmp/pids/unicorn.pid
+User=discourse
+Group=discourse
+WorkingDirectory=/var/www/discourse
+EnvironmentFile={{ sysconfig_directory }}/discourse-unicorn-env
+PrivateTmp=yes
+
+ExecStart=/home/discourse/.rbenv/shims/bundle exec unicorn -E production -c config/unicorn.conf.rb
+ExecReload=/usr/local/bin/discourse-unicorn-reload.sh $MAINPID
+
+
+[Install]
+WantedBy=multi-user.target
