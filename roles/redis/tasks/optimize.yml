@@ -14,16 +14,16 @@
     sysctl_set: True
     reload: True
 
-- name: "always overcommit memory"
-  sysctl:
-    name: "vm.overcommit_memory"
-    value: "1"
-    sysctl_set: True
-    reload: True
+#- name: "always overcommit memory"
+#  sysctl:
+#    name: "vm.overcommit_memory"
+#    value: "1"
+#    sysctl_set: True
+#    reload: True
 
-# When running redis, it"s recommended to disable transparent huge pages.
+# When running redis, it's recommended to disable transparent huge pages.
 # The best way to disable it is to append "transparent_hugepage: never" to
-# the kernel cmdline, but there isn"t a robust way to do that with Ansible
+# the kernel cmdline, but there isn't a robust way to do that with Ansible
 # so instead we"ll run a boot script.
 - name: "disable transparent huge pages"
   copy:
