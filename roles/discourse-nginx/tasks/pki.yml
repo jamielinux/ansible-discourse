@@ -7,7 +7,6 @@
     group: "root"
     mode: "0755"
     state: "directory"
-    recurse: True
 
 - name: "create Diffie-Hellman parameter file"
   command: "/usr/bin/openssl dhparam -out /etc/pki/tls/discourse/dh{{ tls_dhparam_size }}.pem {{ tls_dhparam_size }}"
