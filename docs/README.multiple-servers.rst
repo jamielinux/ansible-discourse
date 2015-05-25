@@ -3,7 +3,7 @@ Multiple server configuration
 *****************************
 
 It’s best to run PostgreSQL on a separate server, as PostgreSQL doesn’t like
-memory pressure. (It’s also possible to run Redis on a separate server.)
+memory pressure.
 
 Example
 =======
