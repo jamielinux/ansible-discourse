@@ -1,11 +1,11 @@
 ---
 
 # CentOS 7 is stuck on version 1.6.x.
-- name: "install jamielinux-nginx-stable repository"
+- name: "install jamielinux-nginx repository"
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
   template:
-    src: "jamielinux-nginx-stable.repo.j2"
-    dest: "/etc/yum.repos.d/jamielinux-nginx-stable.repo"
+    src: "jamielinux-nginx.repo.j2"
+    dest: "/etc/yum.repos.d/jamielinux-nginx.repo"
     owner: "root"
     group: "root"
     mode: "0644"
@@ -13,8 +13,8 @@
 - name: "install GPG key"
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
   copy:
-    src: "RPM-GPG-KEY-jamielinux-nginx-stable"
-    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-nginx-stable"
+    src: "RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
     owner: "root"
     group: "root"
     mode: "0644"
@@ -28,8 +28,8 @@
 - name: "import GPG key"
   when: >
     ( ansible_os_family == "RedHat" and ansible_distribution_major_version == "7" )
-    and ( "gpg-pubkey-f06d0959-555da912" not in rpm_pubkeys.stdout )
-  command: "/usr/bin/rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-nginx-stable"
+    and ( "gpg-pubkey-ac2932f8-5566da04" not in rpm_pubkeys.stdout )
+  command: "/usr/bin/rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
 
 - name: "install nginx"
   when: ansible_os_family == "RedHat"
