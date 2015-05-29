@@ -1,6 +1,6 @@
 ---
 
-nginx_worker_processes:       "auto"
+nginx_worker_processes:       "1"
 
 # worker_connections cannot exceed the OS limit for open file descriptors.
 nginx_worker_connections:     "4096"
