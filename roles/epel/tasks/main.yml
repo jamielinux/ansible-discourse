@@ -1,6 +1,50 @@
 ---
 
+- name: "check if /etc/yum.repos.d/epel.repo exists"
+  stat:
+    path: "/etc/yum.repos.d/epel.repo"
+  changed_when: False
+  register: epel_repo
+
+- name: "install epel-bootstrap repository"
+  when: not epel_repo.stat.exists
+  copy:
+    src: "epel-{{ ansible_distribution_major_version }}-bootstrap.repo"
+    dest: "/etc/yum.repos.d/epel-bootstrap.repo"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "install epel-bootstrap GPG key"
+  when: not epel_repo.stat.exists
+  copy:
+    src: "RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}-BOOTSTRAP"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-BOOTSTRAP"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "import epel-bootstrap GPG key"
+  when: not epel_repo.stat.exists
+  command: >
+    /usr/bin/rpm --import
+    /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-BOOTSTRAP
+
 - name: "install EPEL repository"
-  when: ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux"
-  script: "bootstrap-epel-{{ ansible_distribution_major_version }}-repo.sh creates=/etc/yum.repos.d/epel.repo"
+  when: not epel_repo.stat.exists
+  yum:
+    enablerepo: "epel-bootstrap"
+    name: "epel-release"
+    update_cache: True
+    state: "present"
+
+- name: "remove epel-bootstrap repository"
+  file:
+    dest: "/etc/yum.repos.d/epel-bootstrap.repo"
+    state: "absent"
+
+- name: "remove epel-bootstrap key"
+  file:
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-BOOTSTRAP"
+    state: "absent"
 

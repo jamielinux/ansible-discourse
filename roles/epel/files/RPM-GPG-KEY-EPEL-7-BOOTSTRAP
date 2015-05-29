@@ -1,15 +1,3 @@
-#!/bin/sh
-/usr/bin/cat << 'EOF' > /etc/yum.repos.d/epel-bootstrap.repo
-[epel-bootstrap]
-name=Extra Packages for Enterprise Linux 7 - $basearch
-mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=$basearch
-failovermethod=priority
-enabled=0
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7-BOOTSTRAP
-EOF
-
-/usr/bin/cat << 'EOF' > /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7-BOOTSTRAP
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
@@ -39,7 +27,3 @@ vCPFU6OsT3lWQ8w7il5ohY95wmujfr6lk89kEzJdOTzcn7DBbUru33CQMGKZ3Evt
 RjsC7FDbL017qxS+ZVA/HGkyfiu4cpgV8VUnbql5eAZ+1Ll6Dw==
 =hdPa
 -----END PGP PUBLIC KEY BLOCK-----
-EOF
-
-/usr/bin/yum --enablerepo=epel-bootstrap -y install epel-release \
-    && /usr/bin/rm -f /etc/yum.repos.d/epel-bootstrap.repo
