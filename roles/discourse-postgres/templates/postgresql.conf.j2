@@ -18,6 +18,7 @@ log_rotation_age = 1d
 log_rotation_size = 0
 log_timezone = '{{ postgres_timezone }}'
 log_min_duration_statement = {{ postgres_log_min_duration_statement }}
+log_lock_waits = {{ postgres_log_lock_waits }}
 datestyle = '{{ postgres_datestyle }}'
 timezone = '{{ postgres_timezone }}'
 lc_messages = '{{ postgres_locale }}'

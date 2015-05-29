@@ -30,6 +30,7 @@ postgres_max_wal_senders:     "2"
 postgres_checkpoint_segments: "10"
 postgres_logging_collector:   "on"
 postgres_log_min_duration_statement: "100"
+postgres_log_lock_waits:      "off"
 
 #---------#
 # Backups #
