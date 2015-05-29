@@ -99,11 +99,11 @@
     - "policycoreutils"
 
 # CentOS 7 is stuck on version 9.2.x.
-- name: "install jamielinux-postgresql94 repository"
+- name: "install jamielinux-postgresql repository"
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
   template:
-    src: "jamielinux-postgresql94.repo.j2"
-    dest: "/etc/yum.repos.d/jamielinux-postgresql94.repo"
+    src: "jamielinux-postgresql.repo.j2"
+    dest: "/etc/yum.repos.d/jamielinux-postgresql.repo"
     owner: "root"
     group: "root"
     mode: "0644"
@@ -111,8 +111,8 @@
 - name: "install GPG key"
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
   copy:
-    src: "RPM-GPG-KEY-jamielinux-postgresql94"
-    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-postgresql94"
+    src: "RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
     owner: "root"
     group: "root"
     mode: "0644"
@@ -126,8 +126,8 @@
 - name: "import GPG key"
   when: >
     ( ansible_os_family == "RedHat" and ansible_distribution_major_version == "7" )
-    and ( "gpg-pubkey-32f41635-556075ee" not in rpm_pubkeys.stdout )
-  command: "/usr/bin/rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-postgresql94"
+    and ( "gpg-pubkey-ac2932f8-5566da04" not in rpm_pubkeys.stdout )
+  command: "/usr/bin/rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
 
 - name: "install packages"
   when: ansible_os_family == "RedHat"
