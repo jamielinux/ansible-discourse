@@ -6,7 +6,7 @@ discourse_hostname:           "discourse.example.com"
 discourse_developer_emails:   ["hello@example.com"]
 
 # This can be any git commit hash, branch or tag.
-discourse_version:            "latest-release"
+discourse_version:            "stable"
 
 discourse_unicorn_workers:    "2"
 discourse_unicorn_sidekiqs:   "1"

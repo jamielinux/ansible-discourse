@@ -118,9 +118,9 @@ instructions.
 Updating
 --------
 
-By default, the `latest Discourse release`_ is installed. When a new version is
-released, simply re-run ``deploy-local.sh``. Re-runs are much faster than the
-first run, as Ansible skips completed tasks.
+By default, the `latest stable Discourse release`_ is installed. When a new
+version is released, simply re-run ``deploy-local.sh``. Re-runs are much faster
+than the first run, as Ansible skips completed tasks.
 
 .. code-block:: console
 
@@ -128,7 +128,7 @@ first run, as Ansible skips completed tasks.
     $ git pull
     $ sudo ./deploy-local.sh
 
-.. _latest Discourse release: https://github.com/discourse/discourse/releases/tag/latest-release
+.. _latest stable Discourse release: https://github.com/discourse/discourse/tree/stable
 
 Advanced configuration
 ======================
