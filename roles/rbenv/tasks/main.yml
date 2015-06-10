@@ -1,5 +1,8 @@
 ---
 
+- include: "facts.yml"
+  tags: "always"
+
 - include: "user.yml"
   tags: "rbenv-user"
 
