@@ -1,8 +1,5 @@
 ---
 
-- name: "check if postgres_password is empty"
-  assert: { that: "postgres_password != ''" }
-
 - name: "run locale-gen"
   when: ansible_distribution == "Debian"
   locale_gen:

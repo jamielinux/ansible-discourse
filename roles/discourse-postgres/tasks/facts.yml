@@ -1,5 +1,11 @@
 ---
 
+- name: "check if postgres_version is defined"
+  assert: { that: "postgres_version is defined" }
+
+- name: "check if postgres_password is empty"
+  assert: { that: "postgres_password != ''" }
+
 - name: "set postgres home directory"
   when: ansible_os_family == "RedHat"
   set_fact:
