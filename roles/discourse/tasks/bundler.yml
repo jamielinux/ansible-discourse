@@ -68,3 +68,13 @@
   notify:
     - "reload discourse-unicorn"
 
+# `bundle install` may alter the "BUNDLED WITH" version in Gemfile.lock. If we
+# run the playbook again, Ansible will think there have been changes to the git
+# repo even if the commit hash is the same. The following task prevents this.
+- name: "git checkout -- Gemfile.lock"
+  when: bundle_install_post.changed
+  command: "/usr/bin/git checkout -- Gemfile.lock"
+  args:
+    chdir: "/var/www/discourse"
+  sudo_user: "discourse"
+
