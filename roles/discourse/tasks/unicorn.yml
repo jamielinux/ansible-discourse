@@ -43,3 +43,8 @@
     state: "started"
   register: start_discourse_unicorn
 
+- name: "wait for discourse-unicorn.service to start"
+  when: start_discourse_unicorn.changed
+  pause:
+    seconds: "15"
+
