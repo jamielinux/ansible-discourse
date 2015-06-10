@@ -5,6 +5,8 @@
 discourse_hostname:           "discourse.example.com"
 discourse_developer_emails:   ["hello@example.com"]
 
+postgres_version:             "9.3"
+
 # Generate a long, random password here.
 postgres_password:            "12345678"
 
