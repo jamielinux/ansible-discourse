@@ -12,6 +12,9 @@
 - include: "initdb.yml"
   tags: "postgres-initdb"
 
+- include: "services.yml"
+  tags: "postgres-services"
+
 - include: "discourse.yml"
   tags: "postgres-discourse"
 

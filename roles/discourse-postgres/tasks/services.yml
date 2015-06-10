@@ -1,0 +1,34 @@
+---
+
+- name: "install /usr/lib/tmpfiles.d/postgresql"
+  copy:
+    src: "postgresql.tmpfiles.d"
+    dest: "/usr/lib/tmpfiles.d/postgresql"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "create /var/run/postgresql directory"
+  file:
+    dest: "/var/run/postgresql"
+    owner: "postgres"
+    group: "postgres"
+    mode: "0755"
+    state: "directory"
+    seuser: "staff_u"
+    serole: "object_r"
+    setype: "postgresql_var_run_t"
+    selevel: "s0"
+
+- name: "enable and start postgres"
+  service:
+    name: "{{ postgres_service }}"
+    enabled: True
+    state: "started"
+  register: start_postgres
+
+- name: "wait for postgres to start"
+  when: start_postgres.changed
+  pause:
+    seconds: "5"
+

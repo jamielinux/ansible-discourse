@@ -57,9 +57,3 @@
   notify:
     - "restart postgresql-server"
 
-- name: "enable and start postgres"
-  service:
-    name: "{{ postgres_service }}"
-    enabled: True
-    state: "started"
-
