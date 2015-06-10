@@ -1,25 +1,28 @@
 ---
 
-- name: "set postgres version"
-  when: >
-    ( ansible_distribution == "Debian" and ansible_distribution_major_version == "8" )
-    or ( ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "15.04" )
+- name: "set postgres home directory"
+  when: ansible_os_family == "RedHat"
   set_fact:
-    postgres_version: "9.4"
+    postgres_homedir: "/var/lib/pgsql"
+
+- name: "set postgres home directory"
+  when: ansible_os_family == "Debian"
+  set_fact:
+    postgres_homedir: "/var/lib/postgresql"
 
 - name: "set OS-specific facts"
   when: ansible_os_family == "RedHat"
   set_fact:
-    postgres_backups: "/var/lib/pgsql/backups"
-    postgres_configs: "/var/lib/pgsql/data"
-    postgres_datadir: "/var/lib/pgsql/data"
-    postgres_service: "postgresql.service"
+    postgres_backups: "{{ postgres_homedir }}/{{ postgres_version }}/backups"
+    postgres_configs: "{{ postgres_homedir }}/{{ postgres_version }}/data"
+    postgres_datadir: "{{ postgres_homedir }}/{{ postgres_version }}/data"
+    postgres_service: "postgresql-{{ postgres_version }}.service"
 
 - name: "set OS-specific facts"
   when: ansible_os_family == "Debian"
   set_fact:
-    postgres_backups: "/var/lib/postgresql/backups"
+    postgres_backups: "{{ postgres_homedir }}/backups"
     postgres_configs: "/etc/postgresql/{{ postgres_version }}/main"
-    postgres_datadir: "/var/lib/postgresql/{{ postgres_version }}/main"
+    postgres_datadir: "{{ postgres_homedir }}/{{ postgres_version }}/main"
     postgres_service: "postgresql@{{ postgres_version }}-main.service"
 
