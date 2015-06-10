@@ -1,0 +1,27 @@
+---
+
+- name: "install /usr/local/bin/take-database-backup"
+  template:
+    src: "take-database-backup.j2"
+    dest: "/usr/local/bin/take-database-backup"
+    owner: "postgres"
+    group: "postgres"
+    mode: "0700"
+
+- name: "create postgres backups directory"
+  file:
+    dest: "{{ postgres_backups }}"
+    owner: "postgres"
+    group: "postgres"
+    mode: "0700"
+    state: "directory"
+
+- name: "schedule database backups"
+  when: postgres_auto_backup
+  cron:
+    name: "backup database"
+    minute: "{{ postgres_auto_backup_minute }}"
+    hour: "{{ postgres_auto_backup_hour }}"
+    job: "/usr/local/bin/take-database-backup"
+    user: "postgres"
+

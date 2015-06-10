@@ -6,6 +6,9 @@
 - include: "packages.yml"
   tags: "postgres-packages"
 
+- include: "backups.yml"
+  tags: "postgres-backups"
+
 - include: "initdb.yml"
   tags: "postgres-initdb"
 
