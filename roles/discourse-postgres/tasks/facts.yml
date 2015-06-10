@@ -6,6 +6,11 @@
 - name: "check if postgres_password is empty"
   assert: { that: "postgres_password != ''" }
 
+- name: "set postgres version for RPM packages"
+  when: ansible_os_family == "RedHat"
+  set_fact:
+    postgres_version_short: "{{ postgres_version | replace('.', '') }}"
+
 - name: "set postgres home directory"
   when: ansible_os_family == "RedHat"
   set_fact:
