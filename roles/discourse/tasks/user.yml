@@ -25,3 +25,9 @@
     line: "PATH=$HOME/node_modules/.bin:$PATH"
     insertbefore: "^export PATH$"
 
+- name: "set path to postgres binaries"
+  lineinfile:
+    dest: "/home/discourse/{{ bash_profile }}"
+    line: "PATH=/usr/pgsql-{{ postgres_version }}/bin:$PATH"
+    insertbefore: "^export PATH$"
+

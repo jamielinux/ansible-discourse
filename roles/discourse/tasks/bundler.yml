@@ -25,6 +25,22 @@
   sudo_user: "discourse"
   changed_when: False
 
+- name: "configure path to pg_config"
+  when: ansible_os_family == "RedHat"
+  command: >
+    /home/discourse/.rbenv/shims/bundle config build.pg
+    --with-pg-config=/usr/pgsql-{{ postgres_version }}/bin/pg_config
+  sudo_user: "discourse"
+  changed_when: False
+
+- name: "configure path to pg_config"
+  when: ansible_os_family == "Debian"
+  command: >
+    /home/discourse/.rbenv/shims/bundle config build.pg
+    --with-pg-config=/usr/lib/postgresql/{{ postgres_version }}/bin/pg_config
+  sudo_user: "discourse"
+  changed_when: False
+
 - name: "determine currently installed gems"
   command: "/home/discourse/.rbenv/shims/bundle show --no-color"
   args:

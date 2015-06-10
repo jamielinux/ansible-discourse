@@ -9,6 +9,9 @@
 - include: "packages.yml"
   tags: "discourse-packages"
 
+- include: "postgres.yml"
+  tags: "discourse-postgres"
+
 - include: "app.yml"
   tags: "discourse-app"
 
