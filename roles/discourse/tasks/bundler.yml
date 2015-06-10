@@ -39,7 +39,7 @@
     /usr/bin/ionice -c 3 /usr/bin/nice -n 19
     /home/discourse/.rbenv/shims/bundle install --verbose
     --deployment --without test --without development
-    --binstubs=/home/discourse/bin --jobs=1
+    --binstubs=/home/discourse/bin --jobs=1 --retry=5
   args:
     chdir: "/var/www/discourse"
   sudo_user: "discourse"
