@@ -1,35 +1,92 @@
 ---
 
-# CentOS 7 is stuck on version 9.2.x.
-- name: "install jamielinux-postgresql repository"
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
-  template:
-    src: "jamielinux-postgresql.repo.j2"
-    dest: "/etc/yum.repos.d/jamielinux-postgresql.repo"
-    owner: "root"
-    group: "root"
-    mode: "0644"
+- name: "install packages required for SELinux"
+  when: ansible_selinux.status != "disabled" and ansible_os_family == "RedHat"
+  yum:
+    name: "{{ item }}"
+    update_cache: True
+    state: "present"
+  with_items:
+    - "policycoreutils"
+    - "policycoreutils-python"
 
-- name: "install GPG key"
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
-  copy:
-    src: "RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
-    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
-    owner: "root"
-    group: "root"
-    mode: "0644"
+- name: "install packages required for SELinux"
+  when: ansible_selinux.status != "disabled" and ansible_os_family == "Debian"
+  apt:
+    name: "policycoreutils"
+    update_cache: True
+    state: "present"
 
-- name: "check if GPG key has been imported"
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
-  command: "/usr/bin/rpm -qa gpg-pubkey"
-  register: "rpm_pubkeys"
+- name: "configure SELinux file contexts for PostgreSQL executables"
+  when: ansible_selinux.status != "disabled"
+  command: >
+    /usr/sbin/semanage fcontext -a -t postgresql_exec_t
+    "/usr/pgsql-[0-9.]+/bin/.*"
+  args:
+    creates: "/root/.ansible_semanage_postgresql_exec_t"
+  notify:
+    - "touch /root/.ansible_semanage_postgresql_exec_t"
+
+- name: "configure SELinux file contexts for PostgreSQL log files"
+  when: ansible_selinux.status != "disabled"
+  command: >
+    /usr/sbin/semanage fcontext -a -t postgresql_log_t
+    "/var/lib/pgsql/[0-9.]+/data/pg_log(/.*)?"
+  args:
+    creates: "/root/.ansible_semanage_postgresql_log_t"
+  notify:
+    - "touch /root/.ansible_semanage_postgresql_log_t"
+
+- name: "check if pgdg repository exists"
+  when: ansible_os_family == "RedHat"
+  stat:
+    path: "/etc/yum.repos.d/pgdg-{{ postgres_version_short }}-centos.repo"
   changed_when: False
+  register: pgdg_repo
 
-- name: "import GPG key"
-  when: >
-    ( ansible_os_family == "RedHat" and ansible_distribution_major_version == "7" )
-    and ( "gpg-pubkey-ac2932f8-5566da04" not in rpm_pubkeys.stdout )
-  command: "/usr/bin/rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
+- name: "install pgdg-bootstrap repository"
+  when: ansible_os_family == "RedHat" and not pgdg_repo.stat.exists
+  copy:
+    src: "pgdg-{{ postgres_version_short }}-bootstrap.repo"
+    dest: "/etc/yum.repos.d/pgdg-{{ postgres_version_short }}-bootstrap.repo"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "install pgdg-bootstrap GPG key"
+  when: ansible_os_family == "RedHat" and not pgdg_repo.stat.exists
+  copy:
+    src: "RPM-GPG-KEY-PGDG-{{ postgres_version_short }}-BOOTSTRAP"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-{{ postgres_version_short }}-BOOTSTRAP"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "import pgdg-bootstrap GPG key"
+  when: ansible_os_family == "RedHat" and not pgdg_repo.stat.exists
+  command: >
+    /usr/bin/rpm --import
+    /etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-{{ postgres_version_short }}-BOOTSTRAP
+
+- name: "install pgdg repository"
+  when: ansible_os_family == "RedHat" and not pgdg_repo.stat.exists
+  yum:
+    enablerepo: "pgdg{{ postgres_version_short }}-bootstrap"
+    name: "pgdg-centos{{ postgres_version_short }}"
+    update_cache: True
+    state: "present"
+
+- name: "remove pgdg-bootstrap repository"
+  when: ansible_os_family == "RedHat"
+  file:
+    dest: "/etc/yum.repos.d/pgdg-{{ postgres_version_short }}-bootstrap.repo"
+    state: "absent"
+
+- name: "remove pgdg-bootstrap key"
+  when: ansible_os_family == "RedHat"
+  file:
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-{{ postgres_version_short }}-BOOTSTRAP"
+    state: "absent"
 
 - name: "install packages"
   when: ansible_os_family == "RedHat"
@@ -38,20 +95,34 @@
     update_cache: True
     state: "present"
   with_items:
-    - "postgresql"
-    - "postgresql-contrib"
-    - "postgresql-devel"
-    - "postgresql-server"
+    - "postgresql{{ postgres_version_short }}"
+    - "postgresql{{ postgres_version_short }}-contrib"
+    - "postgresql{{ postgres_version_short }}-devel"
+    - "postgresql{{ postgres_version_short }}-server"
     - "python-psycopg2"
+
+- name: "import PostgreSQL Debian Repository signing key"
+  when: ansible_os_family == "Debian"
+  apt_key:
+    data: "{{ lookup('file', '../files/0xB97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8.asc') }}"
+    id: "0xB97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8"
+    state: "present"
+
+- name: "enable PostgreSQL repository for Debian"
+  when: ansible_os_family == "Debian"
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main"
+    state: "present"
 
 - name: "install packages"
   when: ansible_os_family == "Debian"
   apt:
     name: "{{ item }}"
     update_cache: True
+    default_release: "jessie-pgdg"
     state: "present"
   with_items:
-    - "postgresql"
+    - "postgresql-{{ postgres_version }}"
   register: install_postgresql
 
 - name: "drop default cluster"
@@ -63,10 +134,11 @@
   apt:
     name: "{{ item }}"
     update_cache: True
+    default_release: "jessie-pgdg"
     state: "present"
   with_items:
-    - "postgresql-client"
-    - "postgresql-contrib"
-    - "postgresql-server-dev-all"
+    - "postgresql-client-{{ postgres_version }}"
+    - "postgresql-contrib-{{ postgres_version }}"
+    - "postgresql-server-dev-{{ postgres_version }}"
     - "python-psycopg2"
 
