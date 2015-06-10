@@ -1,5 +1,13 @@
 ---
 
+- name: "check if postgres_version is defined"
+  assert: { that: "postgres_version is defined" }
+
+- name: "set postgres version for RPM packages"
+  when: ansible_os_family == "RedHat"
+  set_fact:
+    postgres_version_short: "{{ postgres_version | replace('.', '') }}"
+
 - name: "set OS-specific facts"
   when: ansible_os_family == "RedHat"
   set_fact:
