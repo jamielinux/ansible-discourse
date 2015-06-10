@@ -48,6 +48,7 @@
     - "gzip"
     - "libcurl-devel"
     - "policycoreutils"
+    - "policycoreutils-python"
 
 # Some of these may not strictly be necessary.
 - name: "install packages for building Discourse"
