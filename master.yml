@@ -10,14 +10,14 @@
       tags: ["unbound"]
 
 
-- name: "discourse-postgres"
+- name: "postgres"
   hosts: "postgres"
   sudo: True
   gather_facts: True
 
   roles:
-    - role: "discourse-postgres"
-      tags: ["discourse-postgres"]
+    - role: "postgres-discourse"
+      tags: ["postgres-discourse"]
 
 
 - name: "redis"

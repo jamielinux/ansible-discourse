@@ -1,0 +1,14 @@
+---
+
+- name: "enable and start postgres"
+  service:
+    name: "{{ postgres_service }}"
+    enabled: True
+    state: "started"
+  register: start_postgres
+
+- name: "wait for postgres to start"
+  when: start_postgres.changed
+  pause:
+    seconds: "5"
+
