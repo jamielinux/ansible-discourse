@@ -1,5 +1,35 @@
 ---
 
+- name: "determine path to libjemalloc shared object"
+  when: ansible_os_family == "RedHat"
+  shell: >
+    /usr/bin/rpm --query --list jemalloc |
+    /usr/bin/grep --extended-regexp --only-matching --line-regexp --max-count=1
+    '^/[_/[:alnum:]-]+/libjemalloc\.so\.1$'
+  register: libjemalloc_redhat
+  changed_when: False
+
+- name: "determine path to libjemalloc shared object"
+  when: ansible_os_family == "Debian"
+  shell: >
+    /usr/bin/dpkg --listfiles libjemalloc1 |
+    /bin/grep --extended-regexp --only-matching --line-regexp --max-count=1
+    '^/[_/[:alnum:]-]+/libjemalloc\.so\.1$'
+  register: libjemalloc_debian
+  changed_when: False
+
+- name: "set path to libjemalloc shared object"
+  when: ansible_os_family == "RedHat"
+  set_fact:
+    libjemalloc: "{{ libjemalloc_redhat.stdout }}"
+  changed_when: False
+
+- name: "set path to libjemalloc shared object"
+  when: ansible_os_family == "Debian"
+  set_fact:
+    libjemalloc: "{{ libjemalloc_debian.stdout }}"
+  changed_when: False
+
 - name: "install /usr/local/bin/discourse-unicorn-reload.sh"
   copy:
     src: "discourse-unicorn-reload.sh"
