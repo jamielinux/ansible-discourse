@@ -39,8 +39,8 @@
     - role: 'discourse'
       tags: ['discourse']
 
-    - role: "discourse-nginx"
-      tags: ["discourse-nginx"]
+    - role: "nginx-discourse"
+      tags: ["nginx-discourse"]
 
     - role: "opendkim"
       tags: ["opendkim"]
