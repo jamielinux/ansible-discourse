@@ -8,5 +8,5 @@ dependencies:
   - role: "rbenv"
     tags: ["rbenv"]
     rbenv_user: "discourse"
-    rbenv_restart: ["discourse-unicorn.service"]
+    rbenv_reload: ["discourse-unicorn.service"]
 

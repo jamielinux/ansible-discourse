@@ -12,6 +12,7 @@
   when: ansible_os_family == "RedHat"
   set_fact:
     libjemalloc: "/usr/lib64/libjemalloc.so.1"
+    libexecdir: "libexec"
     sysconfig_directory: "/etc/sysconfig"
 
 # TODO: Does ansible_architecture will work for all architectures?
@@ -19,5 +20,6 @@
   when: ansible_os_family == "Debian"
   set_fact:
     libjemalloc: "/usr/lib/{{ ansible_architecture }}-linux-gnu/libjemalloc.so.1"
+    libexecdir: "lib"
     sysconfig_directory: "/etc/default"
 

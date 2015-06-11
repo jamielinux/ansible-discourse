@@ -18,6 +18,22 @@
   notify:
     - "restart discourse-unicorn"
 
+- name: "install ~/unicorn.conf.rb"
+  template:
+    src: "unicorn.conf.rb.j2"
+    dest: "/home/discourse/unicorn.conf.rb"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0644"
+
+- name: "install unicorn shim"
+  copy:
+    src: "unicorn"
+    dest: "/usr/local/{{ libexecdir }}/unicorn"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
 - name: "install discourse-unicorn.service"
   template:
     src: "discourse-unicorn.service.j2"
