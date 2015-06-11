@@ -138,3 +138,6 @@ Advanced configuration
 
 * `install Discourse plugins <docs/README.plugins.rst>`_
 
+* `migrate to a new version of PostgreSQL
+  <docs/README.migrate_postgres.rst>`_
+

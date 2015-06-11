@@ -32,12 +32,11 @@ postgres_logging_collector:   "on"
 postgres_log_min_duration_statement: "100"
 postgres_log_lock_waits:      "off"
 
-#---------#
-# Backups #
-#---------#
-
 # Schedule a cron job to backup the database using pg_basebackup.
 postgres_auto_backup:         False
 postgres_auto_backup_minute:  "0"
 postgres_auto_backup_hour:    "0"
+
+# Additional options to pass to pg_upgrade when performing database migrations.
+pg_upgrade_extra_opts:        ""
 
