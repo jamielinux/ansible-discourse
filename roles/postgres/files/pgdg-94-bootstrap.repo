@@ -1,0 +1,6 @@
+[pgdg94-bootstrap]
+name=PostgreSQL 9.4 $releasever - $basearch
+baseurl=http://yum.postgresql.org/9.4/redhat/rhel-$releasever-$basearch
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-94-BOOTSTRAP
