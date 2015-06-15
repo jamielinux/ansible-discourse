@@ -10,7 +10,7 @@
 
 - name: "install GPG key"
   copy:
-    src: "RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
+    src: "0x9530DFD96CDB5DDA4563C8CF9E5A947BAC2932F8.asc"
     dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
     owner: "root"
     group: "root"
