@@ -1,0 +1,34 @@
+---
+
+- name: "install jamielinux-redis repository"
+  template:
+    src: "jamielinux-redis.repo.j2"
+    dest: "/etc/yum.repos.d/jamielinux-redis.repo"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "install GPG key"
+  copy:
+    src: "RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "check if GPG key has been imported"
+  command: "/usr/bin/rpm -qa gpg-pubkey"
+  register: "rpm_pubkeys"
+  changed_when: False
+
+- name: "import GPG key"
+  when: "'gpg-pubkey-ac2932f8-5566da04' not in rpm_pubkeys.stdout"
+  command: "/usr/bin/rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
+
+- name: "install redis"
+  when: ansible_os_family == "RedHat"
+  yum:
+    name: "redis"
+    update_cache: True
+    state: "present"
+

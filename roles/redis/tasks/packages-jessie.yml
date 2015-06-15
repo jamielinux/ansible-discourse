@@ -1,0 +1,14 @@
+---
+
+- name: "enable jessie-backports repository"
+  apt_repository:
+    repo: "deb http://http.debian.net/debian jessie-backports main"
+    state: "present"
+
+- name: "install redis"
+  apt:
+    name: "redis-server"
+    update_cache: True
+    default_release: "jessie-backports"
+    state: "present"
+
