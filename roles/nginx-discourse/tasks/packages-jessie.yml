@@ -1,7 +1,19 @@
 ---
 
+- name: "import jamielinux repository signing key"
+  apt_key:
+    data: "{{ lookup('file', '../files/' + item + '.asc') }}"
+    id: "{{ item }}"
+    state: "present"
+  with_items:
+    - "0x9530DFD96CDB5DDA4563C8CF9E5A947BAC2932F8"
+
+- name: "install jamielinux-nginx repository"
+  apt_repository:
+    repo: "deb http://jamielinux-repo.s3-eu-west-1.amazonaws.com/apt/nginx/debian jessie main"
+    state: "present"
+
 - name: "install nginx"
-  when: ansible_os_family == "Debian"
   apt:
     name: "nginx"
     update_cache: True
