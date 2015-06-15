@@ -2,8 +2,9 @@
 Migrate PostgreSQL to a new major version
 *****************************************
 
-The ``migrate-X-to-Y.yml`` playbooks help you to perform a database migration
-to a later PostgreSQL major version using ``pg_upgrade``.
+The ``migrate-X-to-Y.yml`` playbooks help you to perform a database migration to
+a later PostgreSQL major version (eg, from ``9.3`` to ``9.4``) using
+``pg_upgrade``.
 
 Attempt a migration
 ===================
@@ -12,10 +13,11 @@ Before you do anything, **take a backup of your database!**
 
 Edit ``group_vars/all/main.yml`` and change ``postgres_version`` to the version
 that you want to migrate to (eg, from ``9.3`` to ``9.4``). Now run the
-appropriate ``migrate-X-to-Y.yml`` playbook. If you’re running the playbook
-directly on your server:
+appropriate ``migrate-X-to-Y.yml`` playbook.
 
-.. code-block:: shell
+If you’re running the playbook directly on your server:
+
+.. code-block:: console
 
     $ sudo ansible-playbook -i inventory/local -c local migrate-X-to-Y.yml
 
@@ -38,8 +40,8 @@ What does the migration playbook do?
 
 #. Start the Nginx and Unicorn services.
 
-Failed migration
-================
+What if the migration fails?
+============================
 
 If ``pg_upgrade`` fails, the playbook will bail out. Fortunately, the old
 version of PostgreSQL is still installed and your original database remains

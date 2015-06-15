@@ -3,7 +3,7 @@ Deploy Discourse using Ansible
 ******************************
 
 Easily deploy `Discourse`_ with `Ansible`_ (and without Docker). `Supported
-operating systems include CentOS 7 and Debian Jessie
+operating systems include CentOS and Debian
 <docs/README.operating-system-support.rst>`_.  You don’t need any knowledge of
 Ansible (but it’s recommended).
 
@@ -22,7 +22,8 @@ Bonus features:
 
 * Integration with **systemd** for service management and isolation.
 
-* `Zero downtime`_ restarts of Unicorn when Discourse or gems are updated.
+* `Zero-downtime Unicorn restarts even after upgrading Ruby via rbenv
+  <https://jamielinux.com/blog/zero-downtime-unicorn-restart-when-using-rbenv/>`_.
 
 * Install **Unbound** as a local DNS resolver with DNSSEC validation.
 
@@ -33,7 +34,6 @@ Bonus features:
 .. _official Discourse Docker image: https://github.com/discourse/discourse_docker
 .. _Discourse: http://www.discourse.org/
 .. _Discourse application: https://github.com/discourse/discourse
-.. _Zero downtime: http://unicorn.bogomips.org/SIGNALS.html#label-Procedure+to+replace+a+running+unicorn+executable
 
 Is this for me?
 ===============
@@ -48,13 +48,14 @@ may suit you if:
 * you don’t want to run an OS (Docker container) inside an OS (virtual machine)
   inside an OS
 
-* `you need more secure isolation (eg, hardware virtualization) than Docker can
-  provide <https://opensource.com/business/14/7/docker-security-selinux>`_
+* you need more secure isolation (eg, hardware virtualization) than Docker can
+  provide (as `containers do not contain
+  <https://opensource.com/business/14/7/docker-security-selinux>`_)
 
 Disclaimer
-==========
+----------
 
-I’ll try to make sure ``ansible-discourse`` never fails, but this isn’t a
+I’ll try to make sure ``ansible-discourse`` won’t break, but this isn’t a
 guarantee. If you need guaranteed uptime but aren’t an experienced sysadmin,
 consider purchasing `premium support from Discourse.org`_.
 
@@ -68,7 +69,7 @@ Step 1: Install Ansible
 
 You have two options:
    
-* QUICKER: Install Ansible on your server and continue with the quickstart
+* QUICKSTART: Install Ansible on your server and continue with the quickstart
   instructions.
 
 * BETTER: Install Ansible locally and `deploy to a remote server from your
