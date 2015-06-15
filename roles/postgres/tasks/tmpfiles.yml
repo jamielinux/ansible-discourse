@@ -1,0 +1,22 @@
+---
+
+- name: "install /etc/tmpfiles.d/postgresql"
+  copy:
+    src: "postgresql.tmpfiles.d"
+    dest: "/etc/tmpfiles.d/postgresql"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "create /var/run/postgresql directory"
+  file:
+    dest: "/var/run/postgresql"
+    owner: "postgres"
+    group: "postgres"
+    mode: "0755"
+    state: "directory"
+    seuser: "staff_u"
+    serole: "object_r"
+    setype: "postgresql_var_run_t"
+    selevel: "s0"
+
