@@ -1,0 +1,9 @@
+---
+
+- name: "install nginx"
+  when: ansible_os_family == "Debian"
+  apt:
+    name: "nginx"
+    update_cache: True
+    state: "present"
+
