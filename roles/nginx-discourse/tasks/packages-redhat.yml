@@ -20,10 +20,15 @@
     owner: "root"
     group: "root"
     mode: "0644"
+  register: install_nginx_repo
+
+- name: "update cache"
+  when: install_nginx_repo.changed
+  yum:
+    update_cache: True
 
 - name: "install nginx"
   yum:
     name: "nginx"
-    update_cache: True
     state: "present"
 

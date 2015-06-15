@@ -20,10 +20,15 @@
     owner: "root"
     group: "root"
     mode: "0644"
+  register: install_redis_repo
+
+- name: "update cache"
+  when: install_redis_repo.changed
+  yum:
+    update_cache: True
 
 - name: "install redis"
   yum:
     name: "redis"
-    update_cache: True
     state: "present"
 

@@ -4,7 +4,6 @@
   when: ansible_os_family == "RedHat"
   yum:
     name: "postfix"
-    update_cache: True
     state: "present"
   notify:
     - "restart postfix"
@@ -13,7 +12,6 @@
   when: ansible_os_family == "Debian"
   apt:
     name: "postfix"
-    update_cache: True
     state: "present"
   notify:
     - "restart postfix"

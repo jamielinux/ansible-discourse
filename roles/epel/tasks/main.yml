@@ -35,7 +35,6 @@
   yum:
     enablerepo: "epel-bootstrap"
     name: "epel-release"
-    update_cache: True
     state: "present"
 
 - name: "remove epel-bootstrap repository"

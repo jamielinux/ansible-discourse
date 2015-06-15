@@ -8,7 +8,6 @@
 - name: "install redis"
   apt:
     name: "redis-server"
-    update_cache: True
     default_release: "jessie-backports"
     state: "present"
 

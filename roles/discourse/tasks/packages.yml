@@ -5,7 +5,6 @@
   when: ansible_os_family == "RedHat"
   yum:
     name: "{{ item }}"
-    update_cache: True
     state: "present"
   with_items:
     # Basic development:
@@ -55,7 +54,6 @@
   when: ansible_os_family == "Debian"
   apt:
     name: "{{ item }}"
-    update_cache: True
     state: "present"
   with_items:
     # Basic development:
@@ -103,7 +101,6 @@
   when: ansible_os_family == "RedHat"
   yum:
     name: "{{ item }}"
-    update_cache: True
     state: "present"
   with_items:
     - "postgresql{{ postgres_version_short }}"
@@ -113,7 +110,6 @@
   when: ansible_os_family == "Debian"
   apt:
     name: "{{ item }}"
-    update_cache: True
     state: "present"
   with_items:
     - "postgresql-client-{{ postgres_version }}"

@@ -5,7 +5,6 @@
   when: ansible_os_family == "RedHat"
   yum:
     name: "{{ item }}"
-    update_cache: True
     state: "present"
   with_items:
     # Basic development:
@@ -38,7 +37,6 @@
   when: ansible_os_family == "Debian"
   apt:
     name: "{{ item }}"
-    update_cache: True
     state: "present"
   with_items:
     # Basic development:

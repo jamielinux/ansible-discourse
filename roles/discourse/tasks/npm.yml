@@ -4,14 +4,12 @@
   when: ansible_os_family == "RedHat"
   yum:
     name: "npm"
-    update_cache: True
     state: "present"
 
 - name: "install npm"
   when: ansible_os_family == "Debian"
   apt:
     name: "{{ item }}"
-    update_cache: True
     state: "present"
   with_items:
     - "npm"

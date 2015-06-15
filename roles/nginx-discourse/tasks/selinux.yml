@@ -4,7 +4,6 @@
   when: ansible_selinux.status != "disabled" and ansible_os_family == "RedHat"
   yum:
     name: "{{ item }}"
-    update_cache: True
     state: "present"
   with_items:
     - "policycoreutils"
@@ -14,7 +13,6 @@
   when: ansible_selinux.status != "disabled" and ansible_os_family == "Debian"
   apt:
     name: "policycoreutils"
-    update_cache: True
     state: "present"
 
 - name: "setsebool -P httpd_can_network_connect 1"

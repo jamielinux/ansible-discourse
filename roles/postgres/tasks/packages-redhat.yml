@@ -4,7 +4,6 @@
   when: ansible_selinux.status != "disabled"
   yum:
     name: "{{ item }}"
-    update_cache: True
     state: "present"
   with_items:
     - "policycoreutils"
@@ -65,7 +64,6 @@
   yum:
     enablerepo: "pgdg{{ postgres_version_short }}-bootstrap"
     name: "pgdg-centos{{ postgres_version_short }}"
-    update_cache: True
     state: "present"
 
 - name: "remove pgdg-bootstrap repository"
@@ -81,7 +79,6 @@
 - name: "install packages"
   yum:
     name: "{{ item }}"
-    update_cache: True
     state: "present"
   with_items:
     - "postgresql{{ postgres_version_short }}"

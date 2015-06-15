@@ -16,7 +16,6 @@
 - name: "install packages"
   apt:
     name: "{{ item }}"
-    update_cache: True
     default_release: "jessie-pgdg"
     state: "present"
   with_items:
@@ -30,7 +29,6 @@
 - name: "install packages"
   apt:
     name: "{{ item }}"
-    update_cache: True
     default_release: "jessie-pgdg"
     state: "present"
   with_items:
