@@ -1,0 +1,39 @@
+---
+
+- name: "import PostgreSQL Debian Repository signing key"
+  apt_key:
+    data: "{{ lookup('file', '../files/0xB97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8.asc') }}"
+    id: "0xB97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8"
+    state: "present"
+
+- name: "enable PostgreSQL repository for Debian Jessie"
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main"
+    state: "present"
+
+- name: "install packages"
+  apt:
+    name: "{{ item }}"
+    update_cache: True
+    default_release: "jessie-pgdg"
+    state: "present"
+  with_items:
+    - "postgresql-{{ postgres_version }}"
+  register: install_postgresql
+
+- name: "drop default cluster"
+  when: install_postgresql.changed
+  command: "/usr/bin/pg_dropcluster --stop {{ postgres_version }} main"
+
+- name: "install packages"
+  apt:
+    name: "{{ item }}"
+    update_cache: True
+    default_release: "jessie-pgdg"
+    state: "present"
+  with_items:
+    - "postgresql-client-{{ postgres_version }}"
+    - "postgresql-contrib-{{ postgres_version }}"
+    - "postgresql-server-dev-{{ postgres_version }}"
+    - "python-psycopg2"
+
