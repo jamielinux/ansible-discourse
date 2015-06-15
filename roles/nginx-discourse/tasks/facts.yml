@@ -1,12 +1,14 @@
 ---
 
-- name: "set nginx user"
+- name: "set OS-specific facts"
   when: ansible_os_family == "RedHat"
   set_fact:
+    nginx_upgrade: "/usr/bin/nginx-upgrade"
     nginx_user: "nginx"
 
-- name: "set nginx user"
+- name: "set OS-specific facts"
   when: ansible_os_family == "Debian"
   set_fact:
+    nginx_upgrade: "/usr/sbin/invoke-rc.d nginx upgrade"
     nginx_user: "www-data"
 

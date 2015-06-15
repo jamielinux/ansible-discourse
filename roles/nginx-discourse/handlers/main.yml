@@ -1,7 +1,5 @@
 ---
 
-- name: "restart nginx"
-  service:
-    name: "nginx"
-    state: "restarted"
+- name: "nginx upgrade"
+  command: "{{ nginx_upgrade }}"
 

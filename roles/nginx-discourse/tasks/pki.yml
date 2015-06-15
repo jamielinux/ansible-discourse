@@ -13,7 +13,7 @@
   args:
     creates: "/etc/pki/tls/discourse/dh{{ tls_dhparam_size }}.pem"
   notify:
-    - "restart nginx"
+    - "nginx upgrade"
 
 - name: "install domain TLS key"
   when: tls_enabled
@@ -24,7 +24,7 @@
     group: "root"
     mode: "0400"
   notify:
-    - "restart nginx"
+    - "nginx upgrade"
 
 - name: "install domain TLS certificate"
   when: tls_enabled
@@ -35,7 +35,7 @@
     group: "root"
     mode: "0444"
   notify:
-    - "restart nginx"
+    - "nginx upgrade"
 
 - name: "install certificate authority bundle"
   when: tls_ocsp_stapling_enabled
@@ -43,5 +43,5 @@
     src: "{{ tls_ca_bundle }}"
     dest: "/etc/pki/tls/discourse/{{ discourse_hostname }}.ca-bundle.pem"
   notify:
-    - "restart nginx"
+    - "nginx upgrade"
 
