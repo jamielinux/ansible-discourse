@@ -56,9 +56,9 @@
 
 - name: "import pgdg-bootstrap GPG key"
   when: not pgdg_repo.stat.exists
-  command: >
-    /usr/bin/rpm --import
-    /etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-{{ postgres_version_short }}-BOOTSTRAP
+  rpm_key:
+    key: "/etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-{{ postgres_version_short }}-BOOTSTRAP"
+    state: "present"
 
 - name: "install pgdg repository"
   when: not pgdg_repo.stat.exists

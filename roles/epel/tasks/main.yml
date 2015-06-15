@@ -6,15 +6,6 @@
   changed_when: False
   register: epel_repo
 
-- name: "install epel-bootstrap repository"
-  when: not epel_repo.stat.exists
-  copy:
-    src: "epel-{{ ansible_distribution_major_version }}-bootstrap.repo"
-    dest: "/etc/yum.repos.d/epel-bootstrap.repo"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-
 - name: "install epel-bootstrap GPG key"
   when: not epel_repo.stat.exists
   copy:
@@ -26,9 +17,18 @@
 
 - name: "import epel-bootstrap GPG key"
   when: not epel_repo.stat.exists
-  command: >
-    /usr/bin/rpm --import
-    /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-BOOTSTRAP
+  rpm_key:
+    key: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-BOOTSTRAP"
+    state: "present"
+
+- name: "install epel-bootstrap repository"
+  when: not epel_repo.stat.exists
+  copy:
+    src: "epel-{{ ansible_distribution_major_version }}-bootstrap.repo"
+    dest: "/etc/yum.repos.d/epel-bootstrap.repo"
+    owner: "root"
+    group: "root"
+    mode: "0644"
 
 - name: "install EPEL repository"
   when: not epel_repo.stat.exists
