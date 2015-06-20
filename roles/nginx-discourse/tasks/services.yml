@@ -20,9 +20,14 @@
   command: "/bin/systemctl daemon-reload"
   changed_when: False
 
-- name: "enable and start nginx"
+- name: "enable nginx"
   service:
     name: "nginx.service"
     enabled: True
+
+- name: "start nginx"
+  service:
+    name: "nginx.service"
     state: "started"
+  register: start_nginx
 

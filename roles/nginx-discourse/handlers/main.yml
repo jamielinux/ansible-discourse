@@ -1,5 +1,6 @@
 ---
 
 - name: "nginx upgrade"
+  when: not start_nginx.changed
   command: "{{ nginx_upgrade }}"
 

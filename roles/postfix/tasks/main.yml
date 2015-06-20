@@ -36,9 +36,14 @@
   notify:
     - "restart postfix"
 
-- name: "enable and start postfix"
+- name: "enable postfix"
   service:
     name: "postfix"
     enabled: True
+
+- name: "start postfix"
+  service:
+    name: "postfix"
     state: "started"
+  register: start_postfix
 
