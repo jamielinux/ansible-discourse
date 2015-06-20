@@ -48,10 +48,10 @@
   notify:
     - "restart discourse-unicorn"
 
-- name: "install ~/unicorn.conf.rb"
+- name: "install /var/www/discourse/config/unicorn.rb"
   template:
-    src: "unicorn.conf.rb.j2"
-    dest: "/home/discourse/unicorn.conf.rb"
+    src: "unicorn.rb.j2"
+    dest: "/var/www/discourse/config/unicorn.rb"
     owner: "discourse"
     group: "discourse"
     mode: "0644"

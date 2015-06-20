@@ -2,7 +2,7 @@
 
 [ ! -e "$HOME/.rbenv/shims/bundle" ] && exit 1
 [ ! -e "$HOME/.rbenv/version" ] && exit 1
-[ ! -e "$HOME/unicorn.conf.rb" ] && exit 1
+[ ! -e "/var/www/discourse/config/unicorn.rb" ] && exit 1
 
 RBENV_VERSION="`/usr/bin/head -n1 $HOME/.rbenv/version`"
 [ -z "$RBENV_VERSION" ] && exit 1
@@ -40,4 +40,4 @@ export MANPATH=''
 
 # Execute Unicorn.
 exec $HOME/.rbenv/shims/bundle exec --keep-file-descriptors \
-    unicorn -E production -c $HOME/unicorn.conf.rb
+    unicorn -E production -c /var/www/discourse/config/unicorn.rb
