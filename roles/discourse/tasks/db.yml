@@ -8,11 +8,6 @@
     group: "discourse"
     mode: "0600"
 
-- name: "check if last db migration log exists"
-  stat: path="/var/www/discourse/log/ansible.last_migration.log"
-  changed_when: False
-  register: migration_log
-
 - name: "set psql_host"
   when: discourse_db_host == ""
   set_fact:
@@ -52,7 +47,7 @@
     RACK_ENV: "production"
   sudo_user: "discourse"
   register: rake_db_migrate
-  changed_when: schema_migrations_exists.stdout != "t"
+  changed_when: False
 
 - name: "stdout from `rake db:migrate`"
   when: discourse_verbose
@@ -77,4 +72,6 @@
   changed_when: > 
     schema_migrations_exists.stdout != "t"
     or ( executed_migrations_after.stdout > executed_migrations_before.stdout )
+  notify:
+    - "reload discourse-unicorn"
 

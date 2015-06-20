@@ -33,6 +33,10 @@
 - include: "db.yml"
   tags: "discourse-db"
 
+- include: "multisite.yml"
+  tags: "discourse-multisite"
+  when: discourse_multisite is defined
+
 - include: "assets.yml"
   tags: "discourse-assets"
 

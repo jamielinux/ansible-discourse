@@ -138,3 +138,11 @@
   notify:
     - "reload discourse-unicorn"
 
+- name: "remove multisite.yml"
+  when: discourse_multisite is not defined
+  file:
+    dest: "/var/www/discourse/config/multisite.yml"
+    state: "absent"
+  notify:
+    - "reload discourse-unicorn"
+
