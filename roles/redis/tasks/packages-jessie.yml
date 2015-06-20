@@ -9,5 +9,6 @@
   apt:
     name: "redis-server"
     default_release: "jessie-backports"
+    update_cache: True
     state: "present"
 
