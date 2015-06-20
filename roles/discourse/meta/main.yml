@@ -10,3 +10,6 @@ dependencies:
     rbenv_user: "discourse"
     rbenv_reload: ["discourse-unicorn.service"]
 
+  - role: "postgres-repo"
+    tags: ["postgres-repo"]
+

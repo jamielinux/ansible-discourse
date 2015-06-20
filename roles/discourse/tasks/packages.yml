@@ -1,7 +1,7 @@
 ---
 
 # Some of these may not strictly be necessary.
-- name: "install packages for building Discourse"
+- name: "install packages for Discourse"
   when: ansible_os_family == "RedHat"
   yum:
     name: "{{ item }}"
@@ -41,6 +41,9 @@
     - "optipng"
     - "pngcrush"
     - "pngquant"
+    # PostgreSQL:
+    - "postgresql{{ postgres_version_short }}"
+    - "postgresql{{ postgres_version_short }}-devel"
     # Other:
     - "ImageMagick"
     - "git"
@@ -50,7 +53,7 @@
     - "policycoreutils-python"
 
 # Some of these may not strictly be necessary.
-- name: "install packages for building Discourse"
+- name: "install packages for Discourse"
   when: ansible_os_family == "Debian"
   apt:
     name: "{{ item }}"
@@ -90,28 +93,13 @@
     - "optipng"
     - "pngcrush"
     - "pngquant"
+    # PostgreSQL:
+    - "postgresql-client-{{ postgres_version }}"
+    - "postgresql-server-dev-{{ postgres_version }}"
     # Other:
     - "git"
     - "gzip"
     - "imagemagick"
     - "libcurl3"
     - "policycoreutils"
-
-- name: "install packages"
-  when: ansible_os_family == "RedHat"
-  yum:
-    name: "{{ item }}"
-    state: "present"
-  with_items:
-    - "postgresql{{ postgres_version_short }}"
-    - "postgresql{{ postgres_version_short }}-devel"
-
-- name: "install packages"
-  when: ansible_os_family == "Debian"
-  apt:
-    name: "{{ item }}"
-    state: "present"
-  with_items:
-    - "postgresql-client-{{ postgres_version }}"
-    - "postgresql-server-dev-{{ postgres_version }}"
 

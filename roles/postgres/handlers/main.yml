@@ -6,9 +6,3 @@
     enabled: True
     state: "restarted"
 
-- name: "touch /root/.ansible_semanage_postgresql_exec_t"
-  command: "/usr/bin/touch /root/.ansible_semanage_postgresql_exec_t"
-
-- name: "touch /root/.ansible_semanage_postgresql_log_t"
-  command: "/usr/bin/touch /root/.ansible_semanage_postgresql_log_t"
-

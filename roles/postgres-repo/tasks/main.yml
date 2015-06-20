@@ -1,0 +1,17 @@
+---
+
+- include: "facts.yml"
+  tags: "always"
+
+- include: "repo-redhat.yml"
+  tags: "postgres-repo"
+  when: >
+    ansible_os_family == "RedHat"
+    and ansible_distribution_major_version == "7"
+
+- include: "repo-jessie.yml"
+  tags: "postgres-repo"
+  when: >
+    ansible_os_family == "Debian"
+    and ansible_distribution_major_version == "8"
+
