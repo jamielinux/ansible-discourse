@@ -24,7 +24,6 @@
 - name: "set OS-specific facts"
   when: ansible_os_family == "RedHat"
   set_fact:
-    postgres_backups: "{{ postgres_homedir }}/{{ postgres_version }}/backups"
     postgres_configs: "{{ postgres_homedir }}/{{ postgres_version }}/data"
     postgres_datadir: "{{ postgres_homedir }}/{{ postgres_version }}/data"
     postgres_service: "postgresql-{{ postgres_version }}.service"
@@ -32,7 +31,6 @@
 - name: "set OS-specific facts"
   when: ansible_os_family == "Debian"
   set_fact:
-    postgres_backups: "{{ postgres_homedir }}/backups"
     postgres_configs: "/etc/postgresql/{{ postgres_version }}/main"
     postgres_datadir: "{{ postgres_homedir }}/{{ postgres_version }}/main"
     postgres_service: "postgresql@{{ postgres_version }}-main.service"
