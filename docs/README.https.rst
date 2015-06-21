@@ -56,8 +56,8 @@ Add something like this to ``group_vars/all/main.yml``:
 Now re-run ``deploy-local.sh``. If this is successful, login to your admin
 dashboard and enable HTTPS.
 
-Securely storing your private key
----------------------------------
+Securely store your private key
+-------------------------------
 
 You can use ``ansible-vault`` to store your private key in an encrypted file.
 Place any variables you want to protect (eg, ``tls_domain_key``) inside
@@ -70,8 +70,8 @@ Place any variables you want to protect (eg, ``tls_domain_key``) inside
 Read the `Ansible Vault documentation
 <http://docs.ansible.com/playbooks_vault.html>`_ for more information.
 
-Enable HSTS
-===========
+Enable HSTS (recommended)
+=========================
 
 `HSTS <https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security>`_ protects
 your users against downgrade attacks. Only configure HSTS after you've deployed
@@ -82,8 +82,8 @@ your site with HTTPS enabled and know it's working.
     tls_response_headers:
       - 'Strict-Transport-Security "max-age=15768000"'
 
-Enable OCSP stapling
-====================
+Enable OCSP stapling (recommended)
+==================================
 
 `OCSP stapling <https://en.wikipedia.org/wiki/OCSP_stapling>`_ improves both
 performance and users’ privacy.
@@ -99,4 +99,26 @@ performance and users’ privacy.
 By default, Unbound is installed as a local DNS resolver. If you aren't running
 Unbound, you should change ``nginx_resolver`` to an available DNS resolver (eg,
 ``8.8.8.8``).
+
+Enable HPKP (experimental)
+==========================
+
+Only enable `Public Key Pinning`_ if you know what you're doing. It can make
+your website inaccessible, and returning visitors may be blocked until the HPKP
+header expires. It’s experimental and `not yet recommended`_ on production
+sites.
+
+You can pass any headers you want for HTTPS connections using
+the ``tls_response_headers`` variable, so simply append the HPKP header:
+
+.. code-block:: yaml
+
+    hpkp_header: 'pin-sha256="foo"; pin-sha256="bar"; max-age=5184000;'
+
+    tls_response_headers:
+      - 'Strict-Transport-Security "max-age=15768000"'
+      - "Public-Key-Pins '{{ hpkp_header }}'
+
+.. _Public Key Pinning: https://developer.mozilla.org/en-US/docs/Web/Security/Public_Key_Pinning
+.. _not yet recommended: https://wiki.mozilla.org/Security/Server_Side_TLS#HPKP:_Public_Key_Pinning_Extension_for_HTTP
 
