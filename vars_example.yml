@@ -27,7 +27,7 @@ postgres_password:            "12345678"
 #discourse_smtp_start_tls:     "true"
 
 #-----------------------#
-# Further customization #
+# Further configuration #
 #-----------------------#
 
 # In the "roles/" directory are a collection of roles. Each role has a

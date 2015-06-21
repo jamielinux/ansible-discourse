@@ -49,7 +49,7 @@ Create ``inventory/remote`` with these contents:
 Configure options
 -----------------
 
-Get started with either |vars_example.yml|_ or |vars_ssl_example.yml|_:
+Get started with |vars_example.yml|_:
 
 .. code-block:: shell
 
@@ -76,8 +76,6 @@ additional options:
 
 .. |vars_example.yml| replace:: ``vars_example.yml``
 .. _vars_example.yml: vars_example.yml
-.. |vars_ssl_example.yml| replace:: ``vars_ssl_example.yml``
-.. _vars_ssl_example.yml: vars_ssl_example.yml
 
 Deploy
 ------

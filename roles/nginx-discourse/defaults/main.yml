@@ -40,7 +40,7 @@ response_headers:
 # TLS #
 #-----#
 
-# See <vars_ssl_example.yml> for instructions on how to configure TLS.
+# See <docs/README.https.rst> for instructions on how to configure TLS.
 tls_enabled:                  False
 tls_hsts_enabled:             False
 

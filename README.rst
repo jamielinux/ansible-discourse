@@ -78,21 +78,17 @@ You have two options:
 Step 2: Configure playbook
 --------------------------
 
-Login via SSH to your server. Get started with either |vars_example.yml|_ or
-|vars_ssl_example.yml|_:
+Login via SSH to your server. Get started with |vars_example.yml|_.
 
 .. code-block:: console
 
     $ git clone https://github.com/jamielinux/ansible-discourse
     $ cd ansible-discourse
     $ cp vars_example.yml group_vars/all/main.yml
-
-Edit the options in ``group_vars/all/main.yml``.
+    $ vim group_vars/all/main.yml
 
 .. |vars_example.yml| replace:: ``vars_example.yml``
 .. _vars_example.yml: vars_example.yml
-.. |vars_ssl_example.yml| replace:: ``vars_ssl_example.yml``
-.. _vars_ssl_example.yml: vars_ssl_example.yml
 
 Step 3: Mail server
 -------------------
@@ -131,8 +127,10 @@ than the first run, as Ansible skips completed tasks.
 
 .. _latest stable Discourse release: https://github.com/discourse/discourse/tree/stable
 
-Advanced configuration
-======================
+Further configuration
+=====================
+
+* `enable HTTPS <docs/README.https.rst>`_
 
 * `run PostgreSQL (and/or Redis) on a separate server
   <docs/README.multiple-servers.rst>`_
