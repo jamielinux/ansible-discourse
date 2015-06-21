@@ -5,6 +5,7 @@
 discourse_hostname:           "discourse.example.com"
 discourse_developer_emails:   ["hello@example.com"]
 
+# See <docs/README.migrate-postgres.rst> for help on upgrading.
 postgres_version:             "9.4"
 
 # Generate a long, random password here.
