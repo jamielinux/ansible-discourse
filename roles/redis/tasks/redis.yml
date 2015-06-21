@@ -10,9 +10,14 @@
   notify:
     - "restart redis"
 
-- name: "enable and start redis"
+- name: "enable redis"
   service:
     name: "{{ redis_service }}"
     enabled: True
+
+- name: "start redis"
+  service:
+    name: "{{ redis_service }}"
     state: "started"
+  register: start_redis
 

@@ -27,6 +27,8 @@
     mode: "0644"
     validate: "/usr/sbin/unbound-checkconf %s"
   register: unbound_conf
+  notify:
+    - "restart unbound"
 
 - name: "enable unbound"
   service:

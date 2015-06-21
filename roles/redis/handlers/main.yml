@@ -1,6 +1,7 @@
 ---
 
 - name: "restart redis"
+  when: start_redis is not defined or not start_redis.changed
   service:
     name: "{{ redis_service }}"
     state: "restarted"

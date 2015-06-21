@@ -1,7 +1,7 @@
 ---
 
 - name: "restart postfix"
-  when: not start_postfix.changed
+  when: start_postfix is not defined or not start_postfix.changed
   service:
     name: "postfix"
     state: "restarted"

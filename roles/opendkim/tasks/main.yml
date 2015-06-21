@@ -98,5 +98,10 @@
   service:
     name: "opendkim"
     enabled: True
+
+- name: "start opendkim"
+  service:
+    name: "opendkim"
     state: "started"
+  register: start_opendkim
 
