@@ -44,4 +44,8 @@ discourse_verbose:            True
 #   - name: "discourse-akismet"
 #     repo: "https://github.com/discourse/discourse-akismet.git"
 #     version: "HEAD"
+#
+#   - name: "discourse-spoiler-alert"
+#     repo: "https://github.com/discourse/discourse-spoiler-alert.git"
+#     version: "HEAD"
 
