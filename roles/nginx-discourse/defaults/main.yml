@@ -42,7 +42,9 @@ response_headers:
 
 # See <docs/README.https.rst> for instructions on how to configure TLS.
 tls_enabled:                  False
-tls_hsts_enabled:             False
+
+#tls_response_headers:
+#  - 'Strict-Transport-Security "max-age=15768000"'
 
 tls_dhparam_size:             "2048"
 nginx_ssl_session_timeout:    "10m"

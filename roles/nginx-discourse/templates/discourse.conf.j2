@@ -62,8 +62,10 @@ server {
 
     ssl_prefer_server_ciphers on;
 
-{% if tls_hsts_enabled %}
-    add_header Strict-Transport-Security 'max-age=15768000';
+{% if tls_response_headers is defined %}
+{% for header in tls_response_headers %}
+    add_header {{ header }};
+{% endfor %}
 {% endif %}
 
 {% if tls_ocsp_stapling_enabled %}

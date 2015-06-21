@@ -17,9 +17,6 @@ Add something like this to ``group_vars/all/main.yml``:
     # though the example certificate and key below can be used for testing.
     tls_enabled:                  True
 
-    # Enable HSTS once you're sure you only want HTTPS connections.
-    tls_hsts_enabled:             False
-
     # Remember that Nginx requires the certificate file to contain both the server
     # certificate as well as any intermediate certificates.
     # http://nginx.org/en/docs/http/configuring_https_servers.html#chains
@@ -73,11 +70,23 @@ Place any variables you want to protect (eg, ``tls_domain_key``) inside
 Read the `Ansible Vault documentation
 <http://docs.ansible.com/playbooks_vault.html>`_ for more information.
 
+Enable HSTS
+===========
+
+`HSTS <https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security>`_ protects
+your users against downgrade attacks. Only configure HSTS after you've deployed
+your site with HTTPS enabled and know it's working.
+
+.. code-block:: yaml
+
+    tls_response_headers:
+      - 'Strict-Transport-Security "max-age=15768000"'
+
 Enable OCSP stapling
 ====================
 
 `OCSP stapling <https://en.wikipedia.org/wiki/OCSP_stapling>`_ improves both
-performance and users’ privacy. Add these options:
+performance and users’ privacy.
 
 .. code-block:: yaml
 
