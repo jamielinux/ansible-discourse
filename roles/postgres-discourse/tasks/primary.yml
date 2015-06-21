@@ -3,10 +3,14 @@
 - name: "check if postgres_password is empty"
   assert: { that: "postgres_password != ''" }
 
-- name: "enable and start postgres"
+- name: "enable postgres"
   service:
     name: "{{ postgres_service }}"
     enabled: True
+
+- name: "start postgres"
+  service:
+    name: "{{ postgres_service }}"
     state: "started"
   register: start_postgres
 

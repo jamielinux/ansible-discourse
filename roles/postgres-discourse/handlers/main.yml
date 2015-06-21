@@ -1,0 +1,9 @@
+---
+
+- name: "restart postgresql-server"
+  when: start_postgres is not defined or not start_postgres.changed
+  service:
+    name: "{{ postgres_service }}"
+    enabled: True
+    state: "restarted"
+

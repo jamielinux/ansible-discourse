@@ -1,5 +1,8 @@
 ---
 
+- include: "configs.yml"
+  tags: "postgres-discourse-configs"
+
 - include: "primary.yml"
   tags: "postgres-discourse-primary"
 

@@ -15,9 +15,3 @@
 - name: "touch /root/.ansible_semanage_postgres_logs"
   command: "/usr/bin/touch /root/.ansible_semanage_postgres_logs"
 
-- name: "restart postgresql-server"
-  service:
-    name: "{{ postgres_service }}"
-    enabled: True
-    state: "restarted"
-

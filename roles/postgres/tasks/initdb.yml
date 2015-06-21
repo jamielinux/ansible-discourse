@@ -18,8 +18,6 @@
       --pgdata={{ postgres_datadir }}
       --locale={{ postgres_locale }}
       --encoding={{ postgres_encoding }}
-  notify:
-    - "restart postgresql-server"
 
 - name: "initialize database"
   when: ansible_os_family == "Debian"
@@ -33,26 +31,4 @@
   environment:
     LANG: "{{ postgres_locale }}"
     LC_ALL: "{{ postgres_locale }}"
-  notify:
-    - "restart postgresql-server"
-
-- name: "install pg_hba.conf"
-  template:
-    src: "pg_hba.conf.j2"
-    dest: "{{ postgres_configs }}/pg_hba.conf"
-    owner: "postgres"
-    group: "postgres"
-    mode: "0600"
-  notify:
-    - "restart postgresql-server"
-
-- name: "install postgresql.conf"
-  template:
-    src: "postgresql.conf.j2"
-    dest: "{{ postgres_configs }}/postgresql.conf"
-    owner: "postgres"
-    group: "postgres"
-    mode: "0600"
-  notify:
-    - "restart postgresql-server"
 
