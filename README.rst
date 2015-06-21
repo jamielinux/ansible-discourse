@@ -139,6 +139,8 @@ Advanced configuration
 
 * `install Discourse plugins <docs/README.plugins.rst>`_
 
+* `improve browser security <docs/README.security-headers.rst>`_
+
 * `enable multi-site
   <docs/README.multi-site.rst>`_
 
