@@ -2,9 +2,11 @@
 Migrate PostgreSQL to a new major version
 *****************************************
 
-The ``migrate-X-to-Y.yml`` playbooks help you to perform a database migration to
-a later PostgreSQL major version (eg, from ``9.3`` to ``9.4``) using
-``pg_upgrade``.
+Rarely you may need to upgrade PostgreSQL to a new major version (eg, from
+``9.3`` to ``9.4``), for example if Discourse increases their minimum required
+version. The ``migrate-X-to-Y.yml`` playbooks will perform this upgrade for you.
+Total downtime depends on the size of your database, but in most cases you’ll
+have less than 5 minutes of downtime.
 
 Attempt a migration
 ===================
@@ -20,6 +22,7 @@ If you’re running the playbook directly on your server:
 .. code-block:: console
 
     $ sudo ansible-playbook -i inventory/local -c local migrate-X-to-Y.yml
+
 
 What does the migration playbook do?
 ====================================

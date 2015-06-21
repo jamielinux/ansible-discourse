@@ -142,6 +142,5 @@ Advanced configuration
 * `enable multi-site
   <docs/README.multi-site.rst>`_
 
-* `migrate to a new version of PostgreSQL
-  <docs/README.migrate_postgres.rst>`_
+* `migrate to a new version of PostgreSQL <docs/README.migrate-postgres.rst>`_
 
