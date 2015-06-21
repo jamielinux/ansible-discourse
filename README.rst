@@ -8,27 +8,21 @@ operating systems include CentOS and Debian
 Ansible (but it’s recommended).
 
 ``ansible-discourse`` deploys a similar software stack to the `official
-Discourse Docker image`_:
-
-* **PostgreSQL** and **Redis**
-
-* **Nginx** and **Unicorn**
-
-* **Ruby** (installed with **rbenv**)
-
-* The `Discourse application`_
+Discourse Docker image`_, including PostgreSQL, Redis, NGINX and Ruby (via
+rbenv).
 
 Bonus features:
 
-* Integration with **systemd** for service management and isolation.
+* Integrate with **systemd** for service management and isolation.
 
 * `Zero-downtime Unicorn restarts even after upgrading Ruby via rbenv
-  <https://jamielinux.com/blog/zero-downtime-unicorn-restart-when-using-rbenv/>`_.
+  <https://jamielinux.com/blog/zero-downtime-unicorn-restart-when-using-rbenv/>`_
+  (so downtime is rare).
 
 * Install **Unbound** as a local DNS resolver with DNSSEC validation.
 
-* Install **Postfix** and **OpenDKIM** to send notification emails (so no
-  third-party required).
+* Install **Postfix** and **OpenDKIM** to send emails (so no third-party service
+  is required).
 
 .. _Ansible: http://www.ansible.com
 .. _official Discourse Docker image: https://github.com/discourse/discourse_docker
@@ -52,13 +46,20 @@ may suit you if:
   provide (as `containers do not contain
   <https://opensource.com/business/14/7/docker-security-selinux>`_)
 
-Disclaimer
-----------
+Important notes
+===============
 
-I’ll try to make sure ``ansible-discourse`` won’t break, but this isn’t a
-guarantee. If you need guaranteed uptime but aren’t an experienced sysadmin,
-consider purchasing `premium support from Discourse.org`_.
+* Please don’t report issues to ``meta.discourse.org``. Instead, `open a topic
+  here`_.
 
+* I cannot provide any guarantees. If you need guaranteed uptime but aren’t an
+  experienced system administrator, consider purchasing `premium support from
+  Discourse.org`_.
+
+* PostgreSQL is installed from the ``postgresql.org`` repositories to provide an
+  easy upgrade path.
+
+.. _open a topic here: https://discourse.jamielinux.com/c/ansible-discourse
 .. _premium support from Discourse.org: https://payments.discourse.org/buy/
 
 Quickstart
@@ -97,12 +98,13 @@ Discourse needs to be able to send notification emails. You have two options:
 
 * SELF-HOST: `Deliver your own mail <docs/README.mail.rst>`_.
 
-* EXTERNAL: Sign up with a service like Mandrill.
+* EXTERNAL: Sign up with a commercial service (eg, Mandrill).
 
 Step 4: Deploy
 --------------
 
-The very first run will probably take 10-20 minutes depending on your hardware.
+The very first run will take 10-25 minutes depending on your hardware. A good
+chunk is spent compiling Ruby, so `En Garde <https://xkcd.com/303/>`_!
 
 .. code-block:: console
 
@@ -117,7 +119,8 @@ Updating
 
 By default, the `latest stable Discourse release`_ is installed. When a new
 version is released, simply re-run ``deploy-local.sh``. Re-runs are much faster
-than the first run, as Ansible skips completed tasks.
+than the first run, as Ansible skips completed tasks (eg, Ruby doesn’t need to
+be compiled again).
 
 .. code-block:: console
 
