@@ -1,20 +1,5 @@
 ---
 
-- name: "install packages required for SELinux"
-  when: ansible_selinux.status != "disabled" and ansible_os_family == "RedHat"
-  yum:
-    name: "{{ item }}"
-    state: "present"
-  with_items:
-    - "policycoreutils"
-    - "policycoreutils-python"
-
-- name: "install packages required for SELinux"
-  when: ansible_selinux.status != "disabled" and ansible_os_family == "Debian"
-  apt:
-    name: "policycoreutils"
-    state: "present"
-
 - name: "setsebool -P httpd_can_network_connect 1"
   seboolean:
     name: "httpd_can_network_connect"

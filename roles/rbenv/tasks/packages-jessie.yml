@@ -1,0 +1,34 @@
+---
+
+# Some of these may not strictly be necessary.
+- name: "install packages for building Ruby"
+  apt:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    # Basic development:
+    - "autoconf"
+    - "automake"
+    - "binutils"
+    - "bison"
+    - "byacc"
+    - "gcc"
+    - "g++"
+    - "gettext"
+    - "libtool"
+    - "make"
+    - "libc6-dev"
+    - "patch"
+    - "pkg-config"
+    # Ruby:
+    - "libffi-dev"
+    - "libgdbm3"
+    - "libgdbm-dev"
+    - "libncurses5-dev"
+    - "libreadline6-dev"
+    - "libssl-dev"
+    - "libyaml-dev"
+    - "zlib1g-dev"
+    # Other:
+    - "git"
+

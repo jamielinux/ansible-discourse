@@ -21,9 +21,13 @@
     group: "root"
     mode: "0644"
 
-- name: "install nginx"
+- name: "install packages"
   yum:
-    name: "nginx"
+    name: "{{ item }}"
     update_cache: True
     state: "present"
+  with_items:
+    - "nginx"
+    - "policycoreutils"
+    - "policycoreutils-python"
 

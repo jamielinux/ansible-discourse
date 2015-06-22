@@ -1,0 +1,11 @@
+---
+
+- name: "assert that dkim_domain is defined"
+  assert: { that: "dkim_domain is defined" }
+
+- name: "assert that dkim_selector is defined"
+  assert: { that: "dkim_selector is defined" }
+
+- name: "assert that dkim_private_key is defined"
+  assert: { that: "dkim_private_key is defined" }
+

@@ -3,7 +3,7 @@
 - include: "facts.yml"
   tags: "always"
 
-- include: "packages-redhat.yml"
+- include: "packages-rhel7.yml"
   tags: "redis-packages"
   when: >
     ansible_os_family == "RedHat"

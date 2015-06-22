@@ -1,0 +1,11 @@
+---
+
+- name: "install unbound"
+  when: ansible_os_family == "RedHat"
+  yum:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    - "unbound"
+    - "bind-utils"
+

@@ -13,9 +13,12 @@
     repo: "deb http://jamielinux-repo.s3-eu-west-1.amazonaws.com/apt/nginx/debian jessie main"
     state: "present"
 
-- name: "install nginx"
+- name: "install packages"
   apt:
-    name: "nginx"
+    name: "{{ item }}"
     update_cache: True
     state: "present"
+  with_items:
+    - "nginx"
+    - "policycoreutils"
 

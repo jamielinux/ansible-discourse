@@ -1,20 +1,5 @@
 ---
 
-- name: "install npm"
-  when: ansible_os_family == "RedHat"
-  yum:
-    name: "npm"
-    state: "present"
-
-- name: "install npm"
-  when: ansible_os_family == "Debian"
-  apt:
-    name: "{{ item }}"
-    state: "present"
-  with_items:
-    - "npm"
-    - "nodejs-legacy" # modules break without the /usr/bin/node symlink
-
 - name: "install npm modules"
   npm:
     name: "{{ item }}"

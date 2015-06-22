@@ -1,49 +1,20 @@
 ---
 
-- name: "install postfix"
-  when: ansible_os_family == "RedHat"
-  yum:
-    name: "postfix"
-    state: "present"
-  notify:
-    - "restart postfix"
+- include: "packages-rhel7.yml"
+  tags: "postfix-packages"
+  when: >
+    ansible_os_family == "RedHat"
+    and ansible_distribution_major_version == "7"
 
-- name: "install postfix"
-  when: ansible_os_family == "Debian"
-  apt:
-    name: "postfix"
-    state: "present"
-  notify:
-    - "restart postfix"
+- include: "packages-jessie.yml"
+  tags: "postfix-packages"
+  when: >
+    ansible_os_family == "Debian"
+    and ansible_distribution_major_version == "8"
 
-- name: "install /etc/postfix/main.cf"
-  template:
-    src: "main.cf.j2"
-    dest: "/etc/postfix/main.cf"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  notify:
-    - "restart postfix"
+- include: "configs.yml"
+  tags: "postfix-configs"
 
-- name: "install /etc/postfix/header_checks"
-  copy:
-    src: "header_checks"
-    dest: "/etc/postfix/header_checks"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  notify:
-    - "restart postfix"
-
-- name: "enable postfix"
-  service:
-    name: "postfix"
-    enabled: True
-
-- name: "start postfix"
-  service:
-    name: "postfix"
-    state: "started"
-  register: start_postfix
+- include: "services.yml"
+  tags: "postfix-services"
 

@@ -1,0 +1,22 @@
+---
+
+- name: "install /etc/postfix/main.cf"
+  template:
+    src: "main.cf.j2"
+    dest: "/etc/postfix/main.cf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - "restart postfix"
+
+- name: "install /etc/postfix/header_checks"
+  copy:
+    src: "header_checks"
+    dest: "/etc/postfix/header_checks"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - "restart postfix"
+

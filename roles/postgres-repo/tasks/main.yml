@@ -3,7 +3,7 @@
 - include: "facts.yml"
   tags: "always"
 
-- include: "repo-redhat.yml"
+- include: "repo-rhel7.yml"
   tags: "postgres-repo"
   when: >
     ansible_os_family == "RedHat"

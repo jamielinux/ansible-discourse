@@ -1,85 +1,20 @@
 ---
 
-- name: "install unbound"
-  when: ansible_os_family == "RedHat"
-  yum:
-    name: "{{ item }}"
-    state: "present"
-  with_items:
-    - "unbound"
-    - "bind-utils"
+- include: "packages-rhel7.yml"
+  tags: "unbound-packages"
+  when: >
+    ansible_os_family == "RedHat"
+    and ansible_distribution_major_version == "7"
 
-- name: "install unbound"
-  when: ansible_os_family == "Debian"
-  apt:
-    name: "unbound"
-    state: "present"
-  with_items:
-    - "unbound"
-    - "dnsutils"
+- include: "packages-jessie.yml"
+  tags: "unbound-packages"
+  when: >
+    ansible_os_family == "Debian"
+    and ansible_distribution_major_version == "8"
 
-- name: "install /etc/unbound/unbound.conf"
-  template:
-    src: "unbound.conf.j2"
-    dest: "/etc/unbound/unbound.conf"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-    validate: "/usr/sbin/unbound-checkconf %s"
-  register: unbound_conf
-  notify:
-    - "restart unbound"
+- include: "configs.yml"
+  tags: "unbound-configs"
 
-- name: "enable unbound"
-  service:
-    name: "unbound"
-    enabled: True
-  
-- name: "start unbound"
-  service:
-    name: "unbound"
-    state: "started"
-  register: unbound_start
-  
-# This shouldn't be a handler so that we can test configuration changes.
-- name: "restart unbound"
-  when: unbound_conf.changed and not unbound_start.changed
-  service:
-    name: "unbound"
-    state: "restarted"
-
-- name: "check DNSSEC resolution org."
-  when: unbound_conf.changed or unbound_start.changed
-  command: "/usr/bin/dig @localhost org. SOA +dnssec"
-  register: dig_org
-  changed_when: False
-  failed_when: "'status: NOERROR' not in dig_org.stdout"
-
-# This test seems unreliable.
-#- name: "check DNSSEC resolution test.dnssec-or-not.net"
-#  when: >
-#    ( unbound_conf.changed or unbound_start.changed )
-#    and ( not unbound_use_caps_for_id )
-#  command: "/usr/bin/dig @localhost +short test.dnssec-or-not.net TXT"
-#  register: dig_dnssec_or_not
-#  changed_when: False
-#  failed_when: "'Yes, you are using DNSSEC' not in dig_dnssec_or_not.stdout"
-#  ignore_errors: True
-
-- name: "check DNSSEC resolution dnssec-failed.org"
-  when: unbound_conf.changed or unbound_start.changed
-  command: "/usr/bin/dig @localhost +noall +comments dnssec-failed.org"
-  register: dig_dnssec_failed
-  changed_when: False
-  failed_when: "'status: SERVFAIL' not in dig_dnssec_failed.stdout"
-  ignore_errors: True
-
-# Only amend resolv.conf after the previous tests have passed.
-- name: "install /etc/resolv.conf"
-  template:
-    src: "resolv.conf.j2"
-    dest: "/etc/resolv.conf"
-    owner: "root"
-    group: "root"
-    mode: "0644"
+- include: "services.yml"
+  tags: "unbound-services"
 
