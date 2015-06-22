@@ -26,18 +26,24 @@
     "COPY ( SELECT EXISTS (
     SELECT 1 FROM pg_tables WHERE tablename='schema_migrations'
     ) ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
   changed_when: False
   sudo_user: "discourse"
   with_items: discourse_multisite
   register: multisite_schema_migrations_exists
 
 - name: "check total number of executed migrations before"
-  when: item.0.stdout == "t"
+  when: >
+    multisite_schema_migrations_exists is defined
+    and ( item.0.stdout == "t" )
   command: >
     /usr/bin/psql {{ item.1.database }} {{ psql_host }} -c
     "COPY (
     SELECT COUNT(*) FROM schema_migrations
     ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
   changed_when: False
   sudo_user: "discourse"
   with_together:
@@ -76,9 +82,17 @@
   sudo_user: "discourse"
   with_items: discourse_multisite
   register: multisite_executed_migrations_after
-  changed_when: False
+  changed_when: >
+    multisite_schema_migrations_exists is not defined
+    or multisite_executed_migrations_before is not defined
+  notify:
+    - "reload discourse-unicorn"
 
 - name: "check if any migrations were executed"
+  when: >
+    multisite_schema_migrations_exists is defined
+    and ( multisite_executed_migrations_before is defined )
+    and ( multisite_executed_migrations_after is defined )
   command: "/bin/true"
   with_together:
     - multisite_schema_migrations_exists.results

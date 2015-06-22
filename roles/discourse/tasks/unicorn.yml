@@ -7,6 +7,7 @@
     /usr/bin/grep --extended-regexp --only-matching --line-regexp --max-count=1
     '^/[_/[:alnum:]-]+/libjemalloc\.so\.1$'
   register: libjemalloc_redhat
+  always_run: True
   changed_when: False
 
 - name: "determine path to libjemalloc shared object"
@@ -16,18 +17,21 @@
     /bin/grep --extended-regexp --only-matching --line-regexp --max-count=1
     '^/[_/[:alnum:]-]+/libjemalloc\.so\.1$'
   register: libjemalloc_debian
+  always_run: True
   changed_when: False
 
 - name: "set path to libjemalloc shared object"
   when: ansible_os_family == "RedHat"
   set_fact:
     libjemalloc: "{{ libjemalloc_redhat.stdout }}"
+  always_run: True
   changed_when: False
 
 - name: "set path to libjemalloc shared object"
   when: ansible_os_family == "Debian"
   set_fact:
     libjemalloc: "{{ libjemalloc_debian.stdout }}"
+  always_run: True
   changed_when: False
 
 - name: "install /usr/local/bin/discourse-unicorn-reload.sh"

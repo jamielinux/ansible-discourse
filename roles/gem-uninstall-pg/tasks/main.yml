@@ -12,10 +12,11 @@
   command: "/home/discourse/.rbenv/shims/bundle show pg"
   args:
     chdir: "/var/www/discourse"
+  always_run: True
+  ignore_errors: True
   sudo_user: "discourse"
   register: bundle_show_pg
   changed_when: bundle_show_pg.rc == 0
-  ignore_errors: True
 
 # Removing pg will force a rebuild against the new postgres on the next run of
 # the main playbook.

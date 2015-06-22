@@ -43,12 +43,16 @@
     FROM information_schema.schemata
     WHERE schema_name='public'
     ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
   changed_when: False
   sudo_user: "postgres"
   register: public_schema_owner
 
 - name: "ALTER SCHEMA public OWNER TO discourse"
-  when: public_schema_owner.stdout != "discourse"
+  when: >
+    public_schema_owner is not defined
+    or public_schema_owner.stdout != "discourse"
   command: >
     /usr/bin/psql discourse -c
     "ALTER SCHEMA public OWNER TO discourse;"
@@ -60,12 +64,14 @@
     "COPY (
     SELECT EXISTS ( SELECT 1 FROM pg_extension WHERE extname='hstore' )
     ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
   changed_when: False
   sudo_user: "postgres"
   register: template1_hstore
 
 - name: "template1 create extension hstore"
-  when: template1_hstore.stdout != "t"
+  when: template1_hstore is not defined or template1_hstore.stdout != "t"
   command: >
     /usr/bin/psql template1 -c
     "CREATE EXTENSION IF NOT EXISTS hstore;"
@@ -77,12 +83,14 @@
     "COPY (
     SELECT EXISTS ( SELECT 1 FROM pg_extension WHERE extname='pg_trgm' )
     ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
   changed_when: False
   sudo_user: "postgres"
   register: template1_pg_trgm
 
 - name: "template1 create extension pg_trgm"
-  when: template1_pg_trgm.stdout != "t"
+  when: template1_pg_trgm is not defined or template1_pg_trgm.stdout != "t"
   command: >
     /usr/bin/psql template1 -c
     "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
@@ -94,12 +102,13 @@
     "COPY (
     SELECT EXISTS ( SELECT 1 FROM pg_extension WHERE extname='hstore' )
     ) TO STDOUT;"
+  always_run: True
   changed_when: False
   sudo_user: "postgres"
   register: discourse_hstore
 
 - name: "discourse create extension hstore"
-  when: discourse_hstore.stdout != "t"
+  when: discourse_hstore is not defined or discourse_hstore.stdout != "t"
   command: >
     /usr/bin/psql discourse -c
     "CREATE EXTENSION IF NOT EXISTS hstore;"
@@ -111,12 +120,14 @@
     "COPY (
     SELECT EXISTS ( SELECT 1 FROM pg_extension WHERE extname='pg_trgm' )
     ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
   changed_when: False
   sudo_user: "postgres"
   register: discourse_pg_trgm
 
 - name: "discourse create extension pg_trgm"
-  when: discourse_pg_trgm.stdout != "t"
+  when: discourse_pg_trgm is not defined or discourse_pg_trgm.stdout != "t"
   command: >
     /usr/bin/psql discourse -c
     "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
