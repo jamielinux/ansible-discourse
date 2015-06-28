@@ -1,0 +1,24 @@
+---
+
+- name: 'import ppa:nginx/stable repository signing key'
+  apt_key:
+    data: "{{ lookup('file', '../files/' + item + '.asc') }}"
+    id: "{{ item }}"
+    state: "present"
+  with_items:
+    - "0x8B3981E7A6852F782CC4951600A6F0A3C300EE8C"
+
+- name: 'install ppa:nginx/stable repository'
+  apt_repository:
+    repo: "deb http://ppa.launchpad.net/nginx/stable/ubuntu vivid main"
+    state: "present"
+
+- name: "install packages"
+  apt:
+    name: "{{ item }}"
+    update_cache: True
+    state: "present"
+  with_items:
+    - "nginx"
+    - "policycoreutils"
+
