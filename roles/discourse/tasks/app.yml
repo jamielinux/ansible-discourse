@@ -93,30 +93,6 @@
     mode: "0755"
     state: "directory"
 
-- name: "install /usr/local/bin/discourse"
-  copy:
-    src: "discourse"
-    dest: "/usr/local/bin/discourse"
-    owner: "root"
-    group: "root"
-    mode: "0755"
-
-- name: "install /usr/local/bin/discourse-rails"
-  copy:
-    src: "discourse-rails"
-    dest: "/usr/local/bin/discourse-rails"
-    owner: "root"
-    group: "root"
-    mode: "0755"
-
-- name: "install /usr/local/bin/discourse-rake"
-  copy:
-    src: "discourse-rake"
-    dest: "/usr/local/bin/discourse-rake"
-    owner: "root"
-    group: "root"
-    mode: "0755"
-
 - name: "install /etc/logrotate.d/discourse"
   copy:
     src: "discourse.logrotate"
