@@ -36,3 +36,21 @@
   notify:
     - "nginx upgrade"
 
+- name: "fix ownership of /var/log/nginx"
+  file:
+    dest: "/var/log/nginx"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
+    mode: "0750"
+    state: "directory"
+
+- name: "install /etc/logrotate.d/nginx"
+  file:
+    src: "{{ item }}"
+    dest: "/etc/logrotate.d/nginx"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  with_first_found:
+    - "logrotate.{{ ansible_os_family }}"
+
