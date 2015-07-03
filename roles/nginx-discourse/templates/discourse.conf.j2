@@ -13,6 +13,12 @@ map $http_x_forwarded_proto $thescheme {
     https https;
 }
 
+log_format log_discourse '[$time_local] $remote_addr "$request" '
+                         '"$http_user_agent" "$sent_http_x_discourse_route" '
+                         '$status $bytes_sent "$http_referer" '
+                         '$upstream_response_time $request_time '
+                         '"$sent_http_x_discourse_username"';
+
 {% if nginx_ratelimit_enabled %}
 limit_req_zone $binary_remote_addr zone=flood:10m rate={{ nginx_reqs_per_second }}r/s;
 limit_req_zone $binary_remote_addr zone=bot:10m rate={{ nginx_reqs_per_minute }}r/m;
@@ -45,6 +51,8 @@ server {
 {% else %}
     listen 80;
 {% endif %}
+
+    access_log /var/log/nginx/access.log log_discourse buffer=16k;
 
     etag off;
 
@@ -109,6 +117,13 @@ server {
 {% endif %}
         }
 
+        location = /srv/status {
+            access_log off;
+            log_not_found off;
+            proxy_pass http://discourse;
+            break;
+        }
+
         location ~ ^/assets/ {
             expires 1y;
             gzip_static on;
@@ -154,7 +169,7 @@ server {
             }
 
             # Thumbnails and optimized images.
-            location ~ /_optimized/ {
+            location ~ /_?optimized/ {
                 try_files $uri =404;
             }
 
@@ -178,9 +193,13 @@ server {
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $thescheme;
+
+            proxy_ignore_headers "Set-Cookie";
+            proxy_hide_header "Set-Cookie";
+
             proxy_cache one;
-            proxy_cache_valid any 1m;
             proxy_cache_valid 200 301 302 7d;
+            proxy_cache_valid any 1m;
             proxy_pass http://discourse;
             break;
         }
