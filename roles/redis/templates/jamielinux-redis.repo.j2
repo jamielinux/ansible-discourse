@@ -1,6 +1,6 @@
 [jamielinux-redis]
 name=jamielinux-redis
-{% if ansible_distribution_major_version < 20 %}
+{% if ansible_distribution_major_version|int < 20 %}
 baseurl=http://jamielinux-repo.s3-eu-west-1.amazonaws.com/enterprise/$releasever/redis/$basearch/
 repo_gpgcheck=1
 {% else %}
