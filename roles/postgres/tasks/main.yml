@@ -3,11 +3,21 @@
 - include: "facts.yml"
   tags: "always"
 
+- include: "selinux.yml"
+  tags: "postgres-selinux"
+  when: ansible_os_family == "RedHat"
+
 - include: "packages-rhel7.yml"
   tags: "postgres-repo"
   when: >
     ansible_os_family == "RedHat"
     and ansible_distribution_major_version == "7"
+
+- include: "packages-f22.yml"
+  tags: "postgres-repo"
+  when: >
+    ansible_os_family == "RedHat"
+    and ansible_distribution_major_version == "22"
 
 - include: "packages-jessie.yml"
   tags: "postgres-repo"

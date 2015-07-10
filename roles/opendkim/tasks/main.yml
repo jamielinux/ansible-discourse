@@ -9,6 +9,12 @@
     ansible_os_family == "RedHat"
     and ansible_distribution_major_version == "7"
 
+- include: "packages-f22.yml"
+  tags: "opendkim-packages"
+  when: >
+    ansible_os_family == "RedHat"
+    and ansible_distribution_major_version == "22"
+
 - include: "packages-jessie.yml"
   tags: "opendkim-packages"
   when: >

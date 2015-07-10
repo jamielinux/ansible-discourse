@@ -1,7 +1,11 @@
 [jamielinux-redis]
 name=jamielinux-redis
+{% if ansible_distribution_major_version < 20 %}
 baseurl=http://jamielinux-repo.s3-eu-west-1.amazonaws.com/enterprise/$releasever/redis/$basearch/
-gpgcheck=1
 repo_gpgcheck=1
+{% else %}
+baseurl=http://jamielinux-repo.s3-eu-west-1.amazonaws.com/fedora/$releasever/redis/$basearch/
+{% endif %}
+gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8
 enabled=1

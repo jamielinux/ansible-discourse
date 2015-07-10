@@ -12,6 +12,12 @@
     ansible_os_family == "RedHat"
     and ansible_distribution_major_version == "7"
 
+- include: "packages-f22.yml"
+  tags: "rbenv-packages"
+  when: >
+    ansible_os_family == "RedHat"
+    and ansible_distribution_major_version == "22"
+
 - include: "packages-jessie.yml"
   tags: "rbenv-packages"
   when: >
