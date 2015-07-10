@@ -24,6 +24,8 @@ Bonus features:
 * Install **Postfix** and **OpenDKIM** to send emails (so no third-party service
   is required).
 
+* Don’t install pngout as it’s not free software.
+
 .. _Ansible: http://www.ansible.com
 .. _official Discourse Docker image: https://github.com/discourse/discourse_docker
 .. _Discourse: http://www.discourse.org/
