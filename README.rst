@@ -2,9 +2,9 @@
 Deploy Discourse using Ansible
 ******************************
 
-Easily deploy `Discourse`_ with `Ansible`_ (and without Docker). `Supported
-operating systems include CentOS and Debian
-<docs/README.operating-system-support.rst>`_.  You don’t need any knowledge of
+Easily deploy `Discourse`_ with `Ansible`_ (and without Docker). `Several
+operating systems are supported <docs/README.operating-system-support.rst>`_,
+including CentOS, Debian, Fedora and Ubuntu. You don’t need any knowledge of
 Ansible (but it’s recommended).
 
 ``ansible-discourse`` deploys a similar software stack to the `official
