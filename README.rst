@@ -58,8 +58,8 @@ Important notes
   experienced system administrator, consider purchasing `premium support from
   Discourse.org`_.
 
-* PostgreSQL is installed from the ``postgresql.org`` repositories to provide an
-  easy upgrade path.
+* In some cases, `external package repositories are used
+  <docs/README.operating-system-support.rst>`_.
 
 .. _open a topic here: https://discourse.jamielinux.com/c/ansible-discourse
 .. _premium support from Discourse.org: https://payments.discourse.org/buy/
