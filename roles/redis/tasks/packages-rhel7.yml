@@ -1,0 +1,29 @@
+---
+
+- name: "install jamielinux repository signing key"
+  copy:
+    src: "0x9530DFD96CDB5DDA4563C8CF9E5A947BAC2932F8.asc"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "import jamielinux repository signing key"
+  rpm_key:
+    key: "/etc/pki/rpm-gpg/RPM-GPG-KEY-jamielinux-0x9E5A947BAC2932F8"
+    state: "present"
+
+- name: "install jamielinux-redis repository"
+  template:
+    src: "jamielinux-redis.repo.j2"
+    dest: "/etc/yum.repos.d/jamielinux-redis.repo"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "install redis"
+  yum:
+    name: "redis"
+    update_cache: True
+    state: "present"
+

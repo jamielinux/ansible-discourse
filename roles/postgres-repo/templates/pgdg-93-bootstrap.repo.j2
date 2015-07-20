@@ -1,0 +1,10 @@
+[pgdg93-bootstrap]
+name=PostgreSQL 9.3 $releasever - $basearch
+{% if ansible_distribution_major_version|int < 20 %}
+baseurl=http://yum.postgresql.org/9.3/redhat/rhel-$releasever-$basearch
+{% else %}
+baseurl=http://yum.postgresql.org/9.3/fedora/fedora-$releasever-$basearch
+{% endif %}
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-93-BOOTSTRAP

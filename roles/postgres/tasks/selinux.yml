@@ -1,0 +1,60 @@
+---
+
+- name: "install packages required for SELinux"
+  yum:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    - "policycoreutils"
+    - "policycoreutils-python"
+
+- name: "configure SELinux file context for initdb"
+  when: ansible_selinux.status != "disabled"
+  command: >
+    /usr/sbin/semanage fcontext -a -t postgresql_exec_t -f f
+    "/usr/pgsql-[0-9.]+/bin/initdb"
+  args:
+    creates: "/root/.ansible_semanage_initdb"
+  notify:
+    - "touch /root/.ansible_semanage_initdb"
+
+- name: "configure SELinux file context for pg_ctl"
+  when: ansible_selinux.status != "disabled"
+  command: >
+    /usr/sbin/semanage fcontext -a -t postgresql_exec_t -f f
+    "/usr/pgsql-[0-9.]+/bin/pg_ctl"
+  args:
+    creates: "/root/.ansible_semanage_pg_ctl"
+  notify:
+    - "touch /root/.ansible_semanage_pg_ctl"
+
+- name: "configure SELinux file context for postgres"
+  when: ansible_selinux.status != "disabled"
+  command: >
+    /usr/sbin/semanage fcontext -a -t postgresql_exec_t -f f
+    "/usr/pgsql-[0-9.]+/bin/postgres"
+  args:
+    creates: "/root/.ansible_semanage_postgres"
+  notify:
+    - "touch /root/.ansible_semanage_postgres"
+
+- name: "configure SELinux file contexts for pg_log"
+  when: ansible_selinux.status != "disabled"
+  command: >
+    /usr/sbin/semanage fcontext -a -t postgresql_log_t
+    "/var/lib/pgsql/[0-9.]+/data/pg_log(/.*)?"
+  args:
+    creates: "/root/.ansible_semanage_pg_log"
+  notify:
+    - "touch /root/.ansible_semanage_pg_log"
+
+- name: "configure SELinux file contexts for log files"
+  when: ansible_selinux.status != "disabled"
+  command: >
+    /usr/sbin/semanage fcontext -a -t postgresql_log_t
+    "/var/lib/pgsql/[0-9.]+/data/.*\.log"
+  args:
+    creates: "/root/.ansible_semanage_postgres_logs"
+  notify:
+    - "touch /root/.ansible_semanage_postgres_logs"
+

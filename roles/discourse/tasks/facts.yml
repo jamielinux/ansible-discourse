@@ -1,15 +1,22 @@
 ---
 
+- name: "check if postgres_version is defined"
+  assert: { that: "postgres_version is defined" }
+
+- name: "set postgres version for RPM packages"
+  when: ansible_os_family == "RedHat"
+  set_fact:
+    postgres_version_short: "{{ postgres_version | replace('.', '') }}"
+
 - name: "set OS-specific facts"
   when: ansible_os_family == "RedHat"
   set_fact:
-    libjemalloc: "/usr/lib64/libjemalloc.so.1"
+    libexecdir: "libexec"
     sysconfig_directory: "/etc/sysconfig"
 
-# TODO: Does ansible_architecture will work for all architectures?
 - name: "set OS-specific facts"
   when: ansible_os_family == "Debian"
   set_fact:
-    libjemalloc: "/usr/lib/{{ ansible_architecture }}-linux-gnu/libjemalloc.so.1"
+    libexecdir: "lib"
     sysconfig_directory: "/etc/default"
 

@@ -1,0 +1,11 @@
+---
+
+- name: "install packages"
+  yum:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    - "nginx"
+    - "policycoreutils"
+    - "policycoreutils-python"
+

@@ -1,5 +1,39 @@
 ---
 
+- name: "determine path to libjemalloc shared object"
+  when: ansible_os_family == "RedHat"
+  shell: >
+    /usr/bin/rpm --query --list jemalloc |
+    /usr/bin/grep --extended-regexp --only-matching --line-regexp --max-count=1
+    '^/[_/[:alnum:]-]+/libjemalloc\.so\.1$'
+  register: libjemalloc_redhat
+  always_run: True
+  changed_when: False
+
+- name: "determine path to libjemalloc shared object"
+  when: ansible_os_family == "Debian"
+  shell: >
+    /usr/bin/dpkg --listfiles libjemalloc1 |
+    /bin/grep --extended-regexp --only-matching --line-regexp --max-count=1
+    '^/[_/[:alnum:]-]+/libjemalloc\.so\.1$'
+  register: libjemalloc_debian
+  always_run: True
+  changed_when: False
+
+- name: "set path to libjemalloc shared object"
+  when: ansible_os_family == "RedHat"
+  set_fact:
+    libjemalloc: "{{ libjemalloc_redhat.stdout }}"
+  always_run: True
+  changed_when: False
+
+- name: "set path to libjemalloc shared object"
+  when: ansible_os_family == "Debian"
+  set_fact:
+    libjemalloc: "{{ libjemalloc_debian.stdout }}"
+  always_run: True
+  changed_when: False
+
 - name: "install /usr/local/bin/discourse-unicorn-reload.sh"
   copy:
     src: "discourse-unicorn-reload.sh"
@@ -17,6 +51,22 @@
     mode: "0644"
   notify:
     - "restart discourse-unicorn"
+
+- name: "install /var/www/discourse/config/unicorn.rb"
+  template:
+    src: "unicorn.rb.j2"
+    dest: "/var/www/discourse/config/unicorn.rb"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0644"
+
+- name: "install unicorn shim"
+  copy:
+    src: "unicorn"
+    dest: "/usr/local/{{ libexecdir }}/unicorn"
+    owner: "root"
+    group: "root"
+    mode: "0755"
 
 - name: "install discourse-unicorn.service"
   template:
@@ -42,4 +92,9 @@
     name: "discourse-unicorn.service"
     state: "started"
   register: start_discourse_unicorn
+
+- name: "wait for discourse-unicorn.service to start"
+  when: start_discourse_unicorn.changed
+  pause:
+    seconds: "15"
 

@@ -2,9 +2,16 @@
 Configure outgoing mail
 ***********************
 
-Discourse needs to send notification emails. A commercial service can do this
-for you, but it’s not that difficult to deliver your own emails. Just make sure
-you take the following four steps to prevent getting marked as spam.
+Discourse needs to send notification emails. It’s easy to setup a local mail
+transfer agent to deliver your own emails, but the hard part is maintaining
+long-term deliverability. This can be a major headache, especially if the IP
+address of your server is placed on a spam blacklist. Therefore, some people
+prefer to outsource email delivery to a commercial service.
+
+If you’d rather deliver your own email, leave the ``discourse_smtp_*`` options
+at their default values and ``ansible-discourse`` will automatically install
+Postfix and OpenDKIM for you. However, you must take the following four steps to
+avoid getting marked as spam.
 
 Step 1: PTR record
 ==================

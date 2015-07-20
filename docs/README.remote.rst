@@ -1,6 +1,6 @@
-****************************************
-Running Ansible from your local computer
-****************************************
+************************************
+Run Ansible from your local computer
+************************************
 
 The quickstart instructions tell you to log in via SSH to your remote server in
 order to run Ansible. However, it’s much better to run Ansible from your local
@@ -44,7 +44,7 @@ with sudo permissions.
 Configure options
 -----------------
 
-Get started with either |vars_example.yml|_ or |vars_ssl_example.yml|_:
+Get started with |vars_example.yml|_:
 
 .. code-block:: shell
 
@@ -54,8 +54,6 @@ Edit the options in ``group_vars/all/main.yml``.
 
 .. |vars_example.yml| replace:: ``vars_example.yml``
 .. _vars_example.yml: vars_example.yml
-.. |vars_ssl_example.yml| replace:: ``vars_ssl_example.yml``
-.. _vars_ssl_example.yml: vars_ssl_example.yml
 
 Deploy
 ======

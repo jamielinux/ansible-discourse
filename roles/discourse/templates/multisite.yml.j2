@@ -1,0 +1,16 @@
+{% for item in discourse_multisite %}
+{{ item.name }}:
+  adapter: postgresql
+  database: {{ item.database }}
+  username: discourse
+  password: {{ discourse_db_password }}
+  pool: {{ item.pool | default('5') }}
+  timeout: {{ item.timeout | default ('5000') }}
+  db_id: {{ item.db_id }}
+  host_names:
+{% for host_name in item.host_names %}
+    - {{ host_name }}
+{% endfor %}
+
+{% endfor %}
+

@@ -1,0 +1,10 @@
+---
+
+- name: "install unbound"
+  apt:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    - "unbound"
+    - "dnsutils"
+

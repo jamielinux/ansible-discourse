@@ -1,0 +1,55 @@
+---
+
+# Some of these may not strictly be necessary.
+- name: "install packages for Discourse"
+  apt:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    # Basic development:
+    - "autoconf"
+    - "automake"
+    - "binutils"
+    - "bison"
+    - "byacc"
+    - "gcc"
+    - "g++"
+    - "gettext"
+    - "libtool"
+    - "make"
+    - "libc6-dev"
+    - "patch"
+    - "pkg-config"
+    # Ruby:
+    - "libffi-dev"
+    - "libgdbm3"
+    - "libgdbm-dev"
+    - "libncurses5-dev"
+    - "libreadline6-dev"
+    - "libssl-dev"
+    - "libyaml-dev"
+    - "zlib1g-dev"
+    # Unicorn:
+    - "libjemalloc1"
+    # image_optim:
+    - "advancecomp"
+    - "gifsicle"
+    - "jhead"
+    - "jpegoptim"
+    - "libjpeg-turbo-progs"
+    - "optipng"
+    - "pngcrush"
+    - "pngquant"
+    # Node.js
+    - "nodejs-legacy" # modules break without the /usr/bin/node symlink
+    - "npm"
+    # PostgreSQL:
+    - "postgresql-client-{{ postgres_version }}"
+    - "postgresql-server-dev-{{ postgres_version }}"
+    # Other:
+    - "git"
+    - "gzip"
+    - "imagemagick"
+    - "libcurl3"
+    - "policycoreutils"
+

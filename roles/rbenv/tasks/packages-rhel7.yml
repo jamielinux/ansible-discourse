@@ -1,0 +1,33 @@
+---
+
+# Some of these may not strictly be necessary.
+- name: "install packages for building Ruby"
+  yum:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    # Basic development:
+    - "autoconf"
+    - "automake"
+    - "binutils"
+    - "bison"
+    - "byacc"
+    - "gcc"
+    - "gcc-c++"
+    - "gettext"
+    - "glibc-devel"
+    - "libtool"
+    - "make"
+    - "patch"
+    - "pkgconfig"
+    # Ruby:
+    - "gdbm-devel"
+    - "libffi-devel"
+    - "libyaml-devel"
+    - "ncurses-devel"
+    - "openssl-devel"
+    - "readline-devel"
+    - "zlib-devel"
+    # Other:
+    - "git"
+

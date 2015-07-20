@@ -1,0 +1,68 @@
+---
+
+- name: "install /etc/opendkim.conf"
+  copy:
+    src: "opendkim.conf"
+    dest: "/etc/opendkim.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - "restart opendkim"
+
+- name: "create /etc/opendkim directory"
+  file:
+    dest: "/etc/opendkim"
+    owner: "root"
+    group: "opendkim"
+    mode: "0750"
+    state: "directory"
+
+- name: "install /etc/opendkim/KeyTable"
+  template:
+    src: "KeyTable.j2"
+    dest: "/etc/opendkim/KeyTable"
+    owner: "root"
+    group: "opendkim"
+    mode: "0640"
+  notify:
+    - "restart opendkim"
+
+- name: "install /etc/opendkim/SigningTable"
+  template:
+    src: "SigningTable.j2"
+    dest: "/etc/opendkim/SigningTable"
+    owner: "root"
+    group: "opendkim"
+    mode: "0640"
+  notify:
+    - "restart opendkim"
+
+- name: "install /etc/opendkim/TrustedHosts"
+  copy:
+    src: "TrustedHosts"
+    dest: "/etc/opendkim/TrustedHosts"
+    owner: "root"
+    group: "opendkim"
+    mode: "0640"
+  notify:
+    - "restart opendkim"
+
+- name: "create /etc/opendkim/keys directory"
+  file:
+    dest: "/etc/opendkim/keys"
+    owner: "root"
+    group: "opendkim"
+    mode: "0750"
+    state: "directory"
+
+- name: "install DKIM keys"
+  template:
+    src: "dkim_private_key.j2"
+    dest: "/etc/opendkim/keys/{{ dkim_selector }}.private"
+    owner: "root"
+    group: "opendkim"
+    mode: "0640"
+  notify:
+    - "restart opendkim"
+

@@ -1,104 +1,35 @@
 ---
 
-- name: "assert that dkim_domain is defined"
-  assert: { that: "dkim_domain is defined" }
+- include: "facts.yml"
+  tags: "always"
 
-- name: "assert that dkim_selector is defined"
-  assert: { that: "dkim_selector is defined" }
+- include: "packages-rhel7.yml"
+  tags: "opendkim-packages"
+  when: >
+    ansible_os_family == "RedHat"
+    and ansible_distribution_major_version == "7"
 
-- name: "assert that dkim_private_key is defined"
-  assert: { that: "dkim_private_key is defined" }
+- include: "packages-f22.yml"
+  tags: "opendkim-packages"
+  when: >
+    ansible_os_family == "RedHat"
+    and ansible_distribution_major_version == "22"
 
-- name: "install opendkim"
-  when: ansible_os_family == "RedHat"
-  yum:
-    name: "opendkim"
-    update_cache: True
-    state: "present"
-  notify:
-    - "restart opendkim"
+- include: "packages-jessie.yml"
+  tags: "opendkim-packages"
+  when: >
+    ansible_os_family == "Debian"
+    and ansible_distribution_major_version == "8"
 
-- name: "install opendkim"
-  when: ansible_os_family == "Debian"
-  apt:
-    name: "{{ item }}"
-    update_cache: True
-    state: "present"
-  with_items:
-    - "opendkim"
-    - "opendkim-tools"
-  notify:
-    - "restart opendkim"
+- include: "packages-jessie.yml"
+  tags: "opendkim-packages"
+  when: >
+    ansible_os_family == "Debian"
+    and ansible_distribution_version == "15.04"
 
-- name: "install /etc/opendkim.conf"
-  copy:
-    src: "opendkim.conf"
-    dest: "/etc/opendkim.conf"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  notify:
-    - "restart opendkim"
+- include: "configs.yml"
+  tags: "opendkim-configs"
 
-- name: "create /etc/opendkim directory"
-  file:
-    dest: "/etc/opendkim"
-    owner: "root"
-    group: "opendkim"
-    mode: "0750"
-    state: "directory"
-
-- name: "install /etc/opendkim/KeyTable"
-  template:
-    src: "KeyTable.j2"
-    dest: "/etc/opendkim/KeyTable"
-    owner: "root"
-    group: "opendkim"
-    mode: "0640"
-  notify:
-    - "restart opendkim"
-
-- name: "install /etc/opendkim/SigningTable"
-  template:
-    src: "SigningTable.j2"
-    dest: "/etc/opendkim/SigningTable"
-    owner: "root"
-    group: "opendkim"
-    mode: "0640"
-  notify:
-    - "restart opendkim"
-
-- name: "install /etc/opendkim/TrustedHosts"
-  copy:
-    src: "TrustedHosts"
-    dest: "/etc/opendkim/TrustedHosts"
-    owner: "root"
-    group: "opendkim"
-    mode: "0640"
-  notify:
-    - "restart opendkim"
-
-- name: "create /etc/opendkim/keys directory"
-  file:
-    dest: "/etc/opendkim/keys"
-    owner: "root"
-    group: "opendkim"
-    mode: "0750"
-    state: "directory"
-
-- name: "install DKIM keys"
-  template:
-    src: "dkim_private_key.j2"
-    dest: "/etc/opendkim/keys/{{ dkim_selector }}.private"
-    owner: "root"
-    group: "opendkim"
-    mode: "0640"
-  notify:
-    - "restart opendkim"
-
-- name: "enable opendkim"
-  service:
-    name: "opendkim"
-    enabled: True
-    state: "started"
+- include: "services.yml"
+  tags: "opendkim-services"
 

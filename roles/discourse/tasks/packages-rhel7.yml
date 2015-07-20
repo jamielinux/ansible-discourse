@@ -1,0 +1,55 @@
+---
+
+# Some of these may not strictly be necessary.
+- name: "install packages for Discourse"
+  yum:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    # Basic development:
+    - "autoconf"
+    - "automake"
+    - "binutils"
+    - "bison"
+    - "byacc"
+    - "gcc"
+    - "gcc-c++"
+    - "gettext"
+    - "glibc-devel"
+    - "libtool"
+    - "make"
+    - "patch"
+    - "pkgconfig"
+    # Ruby:
+    - "gdbm-devel"
+    - "libffi-devel"
+    - "libyaml-devel"
+    - "ncurses-devel"
+    - "openssl-devel"
+    - "readline-devel"
+    - "zlib-devel"
+    # Unicorn:
+    - "jemalloc"
+    # image_optim:
+    - "advancecomp"
+    - "gifsicle"
+    - "jhead"
+    - "jpegoptim"
+    - "libjpeg"
+    - "libjpeg-turbo-utils"
+    - "optipng"
+    - "pngcrush"
+    - "pngquant"
+    # Node.js
+    - "npm"
+    # PostgreSQL:
+    - "postgresql{{ postgres_version_short }}"
+    - "postgresql{{ postgres_version_short }}-devel"
+    # Other:
+    - "ImageMagick"
+    - "git"
+    - "gzip"
+    - "libcurl-devel"
+    - "policycoreutils"
+    - "policycoreutils-python"
+

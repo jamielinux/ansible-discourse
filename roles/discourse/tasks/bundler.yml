@@ -3,9 +3,10 @@
 - name: "check if bundler is installed"
   command: "/home/discourse/.rbenv/shims/gem list --installed bundler --quiet"
   sudo_user: "discourse"
-  register: gem_list_bundler
+  always_run: True
   ignore_errors: True
   changed_when: False
+  register: gem_list_bundler
   
 - name: "gem install bundler"
   when: gem_list_bundler.rc != 0
@@ -25,11 +26,28 @@
   sudo_user: "discourse"
   changed_when: False
 
+- name: "configure path to pg_config"
+  when: ansible_os_family == "RedHat"
+  command: >
+    /home/discourse/.rbenv/shims/bundle config build.pg
+    --with-pg-config=/usr/pgsql-{{ postgres_version }}/bin/pg_config
+  sudo_user: "discourse"
+  changed_when: False
+
+- name: "configure path to pg_config"
+  when: ansible_os_family == "Debian"
+  command: >
+    /home/discourse/.rbenv/shims/bundle config build.pg
+    --with-pg-config=/usr/lib/postgresql/{{ postgres_version }}/bin/pg_config
+  sudo_user: "discourse"
+  changed_when: False
+
 - name: "determine currently installed gems"
   command: "/home/discourse/.rbenv/shims/bundle show --no-color"
   args:
     chdir: "/var/www/discourse"
   sudo_user: "discourse"
+  always_run: True
   ignore_errors: True
   changed_when: False
   register: bundle_install_pre
@@ -39,7 +57,7 @@
     /usr/bin/ionice -c 3 /usr/bin/nice -n 19
     /home/discourse/.rbenv/shims/bundle install --verbose
     --deployment --without test --without development
-    --binstubs=/home/discourse/bin --jobs=1
+    --binstubs=/home/discourse/bin --jobs=1 --retry=5
   args:
     chdir: "/var/www/discourse"
   sudo_user: "discourse"
@@ -63,8 +81,23 @@
   args:
     chdir: "/var/www/discourse"
   sudo_user: "discourse"
+  always_run: True
+  ignore_errors: True
   register: bundle_install_post
-  changed_when: "bundle_install_pre.stdout != bundle_install_post.stdout"
+  changed_when: >
+    bundle_install_pre is not defined
+    or bundle_install_post is not defined
+    or ( bundle_install_pre.stdout != bundle_install_post.stdout )
   notify:
     - "reload discourse-unicorn"
+
+# `bundle install` may alter the "BUNDLED WITH" version in Gemfile.lock. If we
+# run the playbook again, Ansible will think there have been changes to the git
+# repo even if the commit hash is the same. The following task prevents this.
+- name: "git checkout -- Gemfile.lock"
+  when: bundle_install_post is defined and bundle_install_post.changed
+  command: "/usr/bin/git checkout -- Gemfile.lock"
+  args:
+    chdir: "/var/www/discourse"
+  sudo_user: "discourse"
 

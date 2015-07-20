@@ -1,6 +1,6 @@
 ---
 
-- name: "unbound"
+- name: "install unbound as a local DNSSEC-validating resolver"
   hosts: "all"
   sudo: True
   gather_facts: True
@@ -10,17 +10,17 @@
       tags: ["unbound"]
 
 
-- name: "discourse-postgres"
+- name: "install postgres for use with discourse"
   hosts: "postgres"
   sudo: True
   gather_facts: True
 
   roles:
-    - role: "discourse-postgres"
-      tags: ["discourse-postgres"]
+    - role: "postgres-discourse"
+      tags: ["postgres-discourse"]
 
 
-- name: "redis"
+- name: "install and configure redis"
   hosts: "redis"
   sudo: True
   gather_facts: True
@@ -30,17 +30,17 @@
       tags: ["redis"]
 
 
-- name: "discourse"
+- name: "install discourse, unicorn and nginx"
   hosts: "discourse"
   sudo: True
   gather_facts: True
 
   roles:
-    - role: 'discourse'
-      tags: ['discourse']
+    - role: "discourse"
+      tags: ["discourse"]
 
-    - role: "discourse-nginx"
-      tags: ["discourse-nginx"]
+    - role: "nginx-discourse"
+      tags: ["nginx-discourse"]
 
     - role: "opendkim"
       tags: ["opendkim"]

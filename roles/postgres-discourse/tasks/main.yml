@@ -1,0 +1,12 @@
+---
+
+- include: "configs.yml"
+  tags: "postgres-discourse-configs"
+
+- include: "primary.yml"
+  tags: "postgres-discourse-primary"
+
+- include: "multisite.yml"
+  tags: "postgres-discourse-multisite"
+  when: discourse_multisite is defined
+

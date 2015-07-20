@@ -1,0 +1,34 @@
+---
+
+- name: "run locale-gen"
+  when: ansible_distribution == "Debian"
+  locale_gen:
+    name: "{{ postgres_locale }}"
+    state: "present"
+
+- name: "initialize database"
+  when: ansible_os_family == "RedHat"
+  command: "/usr/pgsql-{{ postgres_version }}/bin/postgresql{{ postgres_version_short }}-setup initdb"
+  args:
+    creates: "{{ postgres_datadir }}/PG_VERSION"
+  environment:
+    LANG: "{{ postgres_locale }}"
+    LC_ALL: "{{ postgres_locale }}"
+    PGSETUP_INITDB_OPTIONS: >
+      --pgdata={{ postgres_datadir }}
+      --locale={{ postgres_locale }}
+      --encoding={{ postgres_encoding }}
+
+- name: "initialize database"
+  when: ansible_os_family == "Debian"
+  command: >
+    /usr/bin/pg_createcluster
+    --locale={{ postgres_locale }}
+    --encoding={{ postgres_encoding }}
+    {{ postgres_version }} main
+  args:
+    creates: "{{ postgres_datadir }}/PG_VERSION"
+  environment:
+    LANG: "{{ postgres_locale }}"
+    LC_ALL: "{{ postgres_locale }}"
+

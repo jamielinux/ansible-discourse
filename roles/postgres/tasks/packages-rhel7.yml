@@ -1,0 +1,13 @@
+---
+
+- name: "install packages"
+  yum:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    - "postgresql{{ postgres_version_short }}"
+    - "postgresql{{ postgres_version_short }}-contrib"
+    - "postgresql{{ postgres_version_short }}-devel"
+    - "postgresql{{ postgres_version_short }}-server"
+    - "python-psycopg2"
+

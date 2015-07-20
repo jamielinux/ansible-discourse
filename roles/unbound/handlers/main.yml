@@ -1,0 +1,8 @@
+---
+
+- name: "restart unbound"
+  when: start_unbound is not defined or not start_unbound.changed
+  service:
+    name: "unbound"
+    state: "restarted"
+

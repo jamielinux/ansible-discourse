@@ -8,11 +8,6 @@
     group: "discourse"
     mode: "0600"
 
-- name: "check if last db migration log exists"
-  stat: path="/var/www/discourse/log/ansible.last_migration.log"
-  changed_when: False
-  register: migration_log
-
 - name: "set psql_host"
   when: discourse_db_host == ""
   set_fact:
@@ -29,17 +24,23 @@
     "COPY ( SELECT EXISTS (
     SELECT 1 FROM pg_tables WHERE tablename='schema_migrations'
     ) ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
   changed_when: False
   sudo_user: "discourse"
   register: schema_migrations_exists
 
 - name: "check total number of executed migrations before"
-  when: schema_migrations_exists.stdout == "t"
+  when: >
+    schema_migrations_exists is defined
+    and schema_migrations_exists.stdout == "t"
   command: >
     /usr/bin/psql discourse {{ psql_host }} -c
     "COPY (
     SELECT COUNT(*) FROM schema_migrations
     ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
   changed_when: False
   sudo_user: "discourse"
   register: executed_migrations_before
@@ -52,7 +53,7 @@
     RACK_ENV: "production"
   sudo_user: "discourse"
   register: rake_db_migrate
-  changed_when: schema_migrations_exists.stdout != "t"
+  changed_when: False
 
 - name: "stdout from `rake db:migrate`"
   when: discourse_verbose
@@ -74,7 +75,14 @@
     ) TO STDOUT;"
   sudo_user: "discourse"
   register: executed_migrations_after
+  always_run: True
+  ignore_errors: True
   changed_when: > 
-    schema_migrations_exists.stdout != "t"
+    schema_migrations_exists is not defined
+    or ( executed_migrations_before is not defined )
+    or ( executed_migrations_after is not defined )
+    or ( schema_migrations_exists.stdout != "t" )
     or ( executed_migrations_after.stdout > executed_migrations_before.stdout )
+  notify:
+    - "reload discourse-unicorn"
 

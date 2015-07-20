@@ -1,0 +1,106 @@
+---
+
+- name: "install multisite.yml"
+  template:
+    src: "multisite.yml.j2"
+    dest: "/var/www/discourse/config/multisite.yml"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0644"
+  notify:
+    - "reload discourse-unicorn"
+
+- name: "set psql_host"
+  when: discourse_db_host == ""
+  set_fact:
+    psql_host: ""
+
+- name: "set psql_host"
+  when: discourse_db_host != ""
+  set_fact:
+    psql_host: "-h {{ discourse_db_host }}"
+
+- name: "check if schema_migrations table exists"
+  command: >
+    /usr/bin/psql {{ item.database }} {{ psql_host }} -c
+    "COPY ( SELECT EXISTS (
+    SELECT 1 FROM pg_tables WHERE tablename='schema_migrations'
+    ) ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
+  changed_when: False
+  sudo_user: "discourse"
+  with_items: discourse_multisite
+  register: multisite_schema_migrations_exists
+
+- name: "check total number of executed migrations before"
+  when: >
+    multisite_schema_migrations_exists is defined
+    and ( item.0.stdout == "t" )
+  command: >
+    /usr/bin/psql {{ item.1.database }} {{ psql_host }} -c
+    "COPY (
+    SELECT COUNT(*) FROM schema_migrations
+    ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
+  changed_when: False
+  sudo_user: "discourse"
+  with_together:
+    - multisite_schema_migrations_exists.results
+    - discourse_multisite
+  register: multisite_executed_migrations_before
+
+- name: "rake multisite:migrate"
+  command: "/home/discourse/.rbenv/shims/bundle exec rake multisite:migrate"
+  args:
+    chdir: "/var/www/discourse"
+  environment:
+    RACK_ENV: "production"
+  sudo_user: "discourse"
+  register: rake_multisite_migrate
+  changed_when: False
+
+- name: "stdout from `rake multisite:migrate`"
+  when: discourse_verbose
+  debug:
+    var: rake_multisite_migrate.stdout_lines
+  changed_when: False
+
+- name: "stderr from `rake multisite:migrate`"
+  when: discourse_verbose
+  debug:
+    var: rake_multisite_migrate.stderr.split('\n')
+  changed_when: False
+
+- name: "check total number of executed migrations after"
+  command: >
+    /usr/bin/psql {{ item.database }} {{ psql_host }} -c
+    "COPY (
+    SELECT COUNT(*) FROM schema_migrations
+    ) TO STDOUT;"
+  sudo_user: "discourse"
+  with_items: discourse_multisite
+  register: multisite_executed_migrations_after
+  changed_when: >
+    multisite_schema_migrations_exists is not defined
+    or multisite_executed_migrations_before is not defined
+  notify:
+    - "reload discourse-unicorn"
+
+- name: "check if any migrations were executed"
+  when: >
+    multisite_schema_migrations_exists is defined
+    and ( multisite_executed_migrations_before is defined )
+    and ( multisite_executed_migrations_after is defined )
+  command: "/bin/true"
+  with_together:
+    - multisite_schema_migrations_exists.results
+    - multisite_executed_migrations_before.results
+    - multisite_executed_migrations_after.results
+  changed_when: > 
+    item.0.stdout != "t"
+    or ( item.2.stdout > item.1.stdout )
+  notify:
+    - "reload discourse-unicorn"
+

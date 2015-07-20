@@ -1,0 +1,15 @@
+---
+
+- name: "import PostgreSQL Debian Repository signing key"
+  apt_key:
+    data: "{{ lookup('file', '../files/' + item + '.asc') }}"
+    id: "{{ item }}"
+    state: "present"
+  with_items:
+    - "0xB97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8"
+
+- name: "enable PostgreSQL repository for Debian Jessie"
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main"
+    state: "present"
+

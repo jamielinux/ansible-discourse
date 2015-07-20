@@ -5,15 +5,18 @@
 discourse_hostname:           "discourse.example.com"
 discourse_developer_emails:   ["hello@example.com"]
 
+# See <docs/README.migrate-postgres.rst> for help on upgrading.
+postgres_version:             "9.4"
+
 # Generate a long, random password here.
 postgres_password:            "12345678"
 
 # If you have a dedicated postgres server, 25% of total RAM is a good starting
 # point. If running postgres on the same server as everything else, try 12.5%.
-postgres_shared_buffers:      "128MB"
+#postgres_shared_buffers:      "128MB"
 
 # If you only have 1GB RAM, use 2 workers. Otherwise increase to 3 or 4.
-discourse_unicorn_workers:    "2"
+#discourse_unicorn_workers:    "2"
 
 # If left as the default 'localhost', postfix and opendkim will be installed.
 # Read <docs/README.mail.rst> for instructions.
@@ -25,7 +28,7 @@ discourse_unicorn_workers:    "2"
 #discourse_smtp_start_tls:     "true"
 
 #-----------------------#
-# Further customization #
+# Further configuration #
 #-----------------------#
 
 # In the "roles/" directory are a collection of roles. Each role has a

@@ -1,0 +1,33 @@
+---
+
+- name: "stop services"
+  service:
+    name: "{{ item }}"
+    state: "stopped"
+  with_items:
+    - "nginx.service"
+    - "discourse-unicorn.service"
+
+- name: "check if pg is installed"
+  command: "/home/discourse/.rbenv/shims/bundle show pg"
+  args:
+    chdir: "/var/www/discourse"
+  always_run: True
+  ignore_errors: True
+  sudo_user: "discourse"
+  register: bundle_show_pg
+  changed_when: bundle_show_pg.rc == 0
+
+# Removing pg will force a rebuild against the new postgres on the next run of
+# the main playbook.
+- name: "bundle exec gem uninstall --executables --ignore-dependencies pg"
+  when: bundle_show_pg.changed
+  command: >
+    /home/discourse/.rbenv/shims/bundle exec
+    gem uninstall --executables --ignore-dependencies pg
+  args:
+    chdir: "/var/www/discourse"
+  sudo_user: "discourse"
+  register: gem_uninstall_pg
+  failed_when: "'Successfully uninstalled' not in gem_uninstall_pg.stdout"
+

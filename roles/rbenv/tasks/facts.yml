@@ -1,0 +1,12 @@
+---
+
+- name: "set BASH profile"
+  when: ansible_os_family == "RedHat"
+  set_fact:
+    bash_profile: ".bash_profile"
+
+- name: "set BASH profile"
+  when: ansible_os_family == "Debian"
+  set_fact:
+    bash_profile: ".profile"
+

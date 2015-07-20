@@ -1,0 +1,10 @@
+---
+
+- name: "install unbound"
+  yum:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    - "unbound"
+    - "bind-utils"
+

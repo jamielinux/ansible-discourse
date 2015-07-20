@@ -1,0 +1,43 @@
+# vim: filetype=nginx
+
+user                    {{ nginx_user }};
+error_log               /var/log/nginx/error.log error;
+pid                     /run/nginx.pid;
+
+worker_processes        {{ nginx_worker_processes }};
+
+events {
+    worker_connections  {{ nginx_worker_connections }};
+}
+
+http {
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+    charset             {{ nginx_charset }};
+
+    log_format   main   '$remote_addr - $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log          off;
+
+    keepalive_timeout   {{ nginx_keepalive_timeout }};
+    server_tokens       {{ nginx_server_tokens }};
+    sendfile            {{ nginx_sendfile }};
+    tcp_nopush          {{ nginx_tcp_nopush }};
+    tcp_nodelay         {{ nginx_tcp_nodelay }};
+    types_hash_max_size {{ nginx_types_hash_max_size }};
+
+{% if nginx_gzip %}
+    gzip                on;
+    gzip_vary           on;
+    gzip_comp_level     {{ nginx_gzip_comp_level }};
+    gzip_min_length     {{ nginx_gzip_min_length }};
+    gzip_types          {{ nginx_gzip_types }};
+{% else %}
+    gzip                off;
+{% endif %}
+
+    include /etc/nginx/conf.d/*.conf;
+}
+

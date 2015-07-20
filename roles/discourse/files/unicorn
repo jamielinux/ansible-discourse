@@ -1,0 +1,43 @@
+#!/bin/sh
+
+[ ! -e "$HOME/.rbenv/shims/bundle" ] && exit 1
+[ ! -e "$HOME/.rbenv/version" ] && exit 1
+[ ! -e "/var/www/discourse/config/unicorn.rb" ] && exit 1
+
+RBENV_VERSION="`/usr/bin/head -n1 $HOME/.rbenv/version`"
+[ -z "$RBENV_VERSION" ] && exit 1
+_RUBY_MAJOR_VER="${RBENV_VERSION%.*}.0"
+
+GEM_HOME="/var/www/discourse/vendor/bundle/ruby/$_RUBY_MAJOR_VER"
+_RBENV_RUBY_PATH="$HOME/.rbenv/versions/$RBENV_VERSION"
+
+[ ! -d "$GEM_HOME" ] && exit 1
+[ ! -d "$_RBENV_RUBY_PATH" ] && exit 1
+[ ! -d "$_RBENV_RUBY_PATH/lib/ruby/gems/$_RUBY_MAJOR_VER/gems" ] && exit 1
+
+# Needed for RUBYLIB and BUNDLE_BIN_PATH.
+_get_bundler_path() {
+    /usr/bin/find "$_RBENV_RUBY_PATH/lib/ruby/gems/$_RUBY_MAJOR_VER/gems" \
+        -mindepth 1 -maxdepth 1 -type d -name 'bundler-[0-9]*' \
+        -print -quit || exit 1
+}
+_BUNDLER_PATH="`_get_bundler_path`"
+[ -z "$_BUNDLER_PATH" ] && exit 1
+[ ! -d "$_BUNDLER_PATH" ] && exit 1
+
+# Set the necessary environment variables.
+PATH="$GEM_HOME/bin"
+PATH="$PATH:$_RBENV_RUBY_PATH/bin"
+PATH="$PATH:$HOME/.rbenv/libexec"
+PATH="$PATH:$HOME/.rbenv/plugins/ruby-build/bin"
+PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+export PATH
+export RBENV_VERSION
+export GEM_HOME
+export RUBYLIB="$_BUNDLER_PATH/lib:$HOME/.rbenv/rbenv.d/exec/gem-rehash"
+export BUNDLE_BIN_PATH="$_BUNDLER_PATH/bin/bundle"
+export MANPATH=''
+
+# Execute Unicorn.
+exec $HOME/.rbenv/shims/bundle exec --keep-file-descriptors \
+    unicorn -E production -c /var/www/discourse/config/unicorn.rb

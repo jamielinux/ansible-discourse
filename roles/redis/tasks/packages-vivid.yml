@@ -1,0 +1,21 @@
+---
+
+- name: 'import ppa:chris-lea/redis signing key'
+  apt_key:
+    data: "{{ lookup('file', '../files/' + item + '.asc') }}"
+    id: "{{ item }}"
+    state: "present"
+  with_items:
+    - "0x136221EE520DDFAF0A905689B9316A7BC7917B12"
+
+- name: 'enable ppa:chris-lea/redis repository'
+  apt_repository:
+    repo: "deb http://ppa.launchpad.net/chris-lea/redis-server/ubuntu vivid main"
+    state: "present"
+
+- name: "install redis"
+  apt:
+    name: "redis-server"
+    update_cache: True
+    state: "present"
+

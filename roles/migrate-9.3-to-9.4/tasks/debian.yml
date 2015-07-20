@@ -1,0 +1,53 @@
+---
+
+- name: "stop the old postgres"
+  service:
+    name: "postgresql@{{ postgres_old }}-main.service"
+    enabled: False
+    state: "stopped"
+
+- name: "upgrade postgres"
+  command: >
+    /usr/lib/postgresql/{{ postgres_new }}/bin/pg_upgrade
+    --old-bindir=/usr/lib/postgresql/{{ postgres_old }}/bin
+    --new-bindir=/usr/lib/postgresql/{{ postgres_new }}/bin
+    --old-datadir=/var/lib/postgresql/{{ postgres_old }}/main
+    --new-datadir=/var/lib/postgresql/{{ postgres_new }}/main
+    --old-port={{ postgres_port }}
+    --new-port={{ postgres_port }}
+    --user=postgres
+    --old-options=' -c config_file=/etc/postgresql/{{ postgres_old }}/main/postgresql.conf'
+    --new-options=' -c config_file=/etc/postgresql/{{ postgres_new }}/main/postgresql.conf'
+    {{ pg_upgrade_extra_opts }}
+  environment:
+    LANG: "{{ postgres_locale }}"
+    LC_ALL: "{{ postgres_locale }}"
+  sudo_user: "postgres"
+  register: pg_upgrade
+
+- name: "stdout from `pg_upgrade`"
+  debug:
+    var: pg_upgrade.stdout_lines
+  changed_when: False
+
+- name: "stderr from `pg_upgrade`"
+  debug:
+    var: pg_upgrade.stderr.split('\n')
+  changed_when: False
+
+- name: "start the new postgres"
+  service:
+    name: "postgresql@{{ postgres_new }}-main.service"
+    enabled: True
+    state: "started"
+
+- name: "wait for postgres to start"
+  pause:
+    seconds: "10"
+
+- name: "vacuumdb"
+  command: >
+    /usr/lib/postgresql/{{ postgres_new }}/bin/vacuumdb
+    -U postgres --all --analyze-in-stages
+  sudo_user: "postgres"
+  

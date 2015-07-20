@@ -1,0 +1,50 @@
+---
+
+- name: "stop Nginx and Unicorn"
+  hosts: "discourse"
+  sudo: True
+  gather_facts: True
+
+  tasks:
+  - name: "stop services"
+    service:
+      name: "{{ item }}"
+      state: "stopped"
+    with_items:
+      - "nginx.service"
+      - "discourse-unicorn.service"
+
+
+- name: "migrate postgres to new major version"
+  hosts: "postgres"
+  sudo: True
+  gather_facts: True
+
+  roles:
+    - role: "migrate-9.3-to-9.4"
+
+
+- name: "install new postgres client and rebuild pg gem"
+  hosts: "discourse"
+  sudo: True
+  gather_facts: True
+
+  roles:
+    - role: "gem-uninstall-pg"
+      tags: ["gem-uninstall-pg"]
+
+    - role: "discourse"
+      tags: ["discourse"]
+
+    - role: "nginx-discourse"
+      tags: ["nginx-discourse"]
+
+    - role: "opendkim"
+      tags: ["opendkim"]
+      when: discourse_smtp_address == 'localhost' and dkim_enabled
+
+    - role: "postfix"
+      tags: ["postfix"]
+      when: discourse_smtp_address == 'localhost'
+
+

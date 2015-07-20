@@ -1,0 +1,14 @@
+---
+
+- name: "install /etc/unbound/unbound.conf"
+  template:
+    src: "unbound.conf.j2"
+    dest: "/etc/unbound/unbound.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    validate: "/usr/sbin/unbound-checkconf %s"
+  register: unbound_conf
+  notify:
+    - "restart unbound"
+

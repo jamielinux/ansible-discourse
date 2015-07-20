@@ -5,6 +5,8 @@ inet_interfaces = localhost
 inet_protocols = all
 mydestination = $myhostname, localhost.$mydomain, localhost
 header_checks = regexp:/etc/postfix/header_checks
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
 
 # opportunistic TLS between servers
 smtp_tls_security_level = may

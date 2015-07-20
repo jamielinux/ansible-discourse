@@ -3,5 +3,7 @@
 dependencies:
   - role: "epel"
     tags: ["epel"]
-    when: ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux"
+    when: >
+      ansible_os_family == "RedHat"
+      and ansible_distribution_major_version == "7"
 

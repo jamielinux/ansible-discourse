@@ -3,14 +3,17 @@
 - name: "check if asset precompilation log file exists"
   stat:
     path: "/var/www/discourse/log/ansible.last_precompilation"
+  always_run: True
+  ignore_errors: True
   changed_when: False
   register: precompilation_log
 
 - name: "check when last asset precompilation was run"
-  when: precompilation_log.stat.exists
+  when: precompilation_log is defined and precompilation_log.stat.exists
   command: >
     /usr/bin/head -c 40
     /var/www/discourse/log/ansible.last_precompilation
+  ignore_errors: True
   changed_when: False
   register: last_precompilation
 
@@ -20,6 +23,7 @@
     ./app/assets/ ./lib/assets/ ./vendor/assets/ ./lib/tasks/assets.rb
   args:
     chdir: "/var/www/discourse"
+  ignore_errors: True
   changed_when: False
   register: current_precompilation
 
@@ -43,7 +47,10 @@
   sudo_user: "discourse"
   register: rake_assets_precompile
   changed_when: >
-    not precompilation_log.stat.exists
+    precompilation_log is not defined
+    or last_precompilation is not defined
+    or current_precompilation is not defined
+    or not precompilation_log.stat.exists
     or ( current_precompilation.stdout != last_precompilation.stdout )
   notify:
     - "record asset precompilation"

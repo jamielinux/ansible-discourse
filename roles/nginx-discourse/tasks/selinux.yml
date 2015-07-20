@@ -1,0 +1,8 @@
+---
+
+- name: "setsebool -P httpd_can_network_connect 1"
+  seboolean:
+    name: "httpd_can_network_connect"
+    state: True
+    persistent: True
+

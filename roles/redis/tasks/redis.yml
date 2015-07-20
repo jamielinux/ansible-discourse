@@ -1,31 +1,23 @@
 ---
 
-- name: "install redis"
-  when: ansible_os_family == "RedHat"
-  yum:
-    name: "redis"
-    update_cache: True
-    state: "present"
-
-- name: "install redis"
-  when: ansible_os_family == "Debian"
-  apt:
-    name: "redis-server"
-    update_cache: True
-    state: "present"
-
-- name: "install /etc/redis.conf"
+- name: "install redis.conf"
   template:
     src: "redis.conf.j2"
-    dest: "/etc/redis.conf"
+    dest: "{{ redis_config }}"
     owner: "root"
     group: "root"
     mode: "0644"
   notify:
     - "restart redis"
 
-- name: "enable and start redis"
+- name: "enable redis"
   service:
     name: "{{ redis_service }}"
     enabled: True
+
+- name: "start redis"
+  service:
+    name: "{{ redis_service }}"
     state: "started"
+  register: start_redis
+

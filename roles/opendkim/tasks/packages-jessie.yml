@@ -1,0 +1,12 @@
+---
+
+- name: "install opendkim"
+  apt:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    - "opendkim"
+    - "opendkim-tools"
+  notify:
+    - "restart opendkim"
+

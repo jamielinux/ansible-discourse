@@ -1,0 +1,7 @@
+---
+
+- name: "set postgres version for RPM packages"
+  when: ansible_os_family == "RedHat"
+  set_fact:
+    postgres_version_short: "{{ postgres_version | replace('.', '') }}"
+

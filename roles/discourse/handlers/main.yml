@@ -9,13 +9,13 @@
     mode: "0644"
 
 - name: "reload discourse-unicorn"
-  when: not start_discourse_unicorn.changed
+  when: start_discourse_unicorn is not defined or not start_discourse_unicorn.changed
   service:
     name: "discourse-unicorn.service"
     state: "reloaded"
 
 - name: "restart discourse-unicorn"
-  when: not start_discourse_unicorn.changed
+  when: start_discourse_unicorn is not defined or not start_discourse_unicorn.changed
   service:
     name: "discourse-unicorn.service"
     state: "restarted"

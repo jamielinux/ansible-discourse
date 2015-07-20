@@ -1,0 +1,17 @@
+---
+
+- name: "touch /root/.ansible_semanage_initdb"
+  command: "/usr/bin/touch /root/.ansible_semanage_initdb"
+
+- name: "touch /root/.ansible_semanage_pg_ctl"
+  command: "/usr/bin/touch /root/.ansible_semanage_pg_ctl"
+
+- name: "touch /root/.ansible_semanage_postgres"
+  command: "/usr/bin/touch /root/.ansible_semanage_postgres"
+
+- name: "touch /root/.ansible_semanage_pg_log"
+  command: "/usr/bin/touch /root/.ansible_semanage_pg_log"
+
+- name: "touch /root/.ansible_semanage_postgres_logs"
+  command: "/usr/bin/touch /root/.ansible_semanage_postgres_logs"
+

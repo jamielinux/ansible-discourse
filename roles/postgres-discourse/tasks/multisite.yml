@@ -1,0 +1,91 @@
+---
+
+- name: "multisite - create additional databases"
+  postgresql_db:
+    name: "{{ item.database }}"
+    encoding: "{{ postgres_encoding }}"
+    lc_collate: "{{ postgres_locale }}"
+    lc_ctype: "{{ postgres_locale }}"
+  sudo_user: "postgres"
+  with_items: discourse_multisite
+
+- name: "multisite - grant permissions"
+  postgresql_user:
+    name: "discourse"
+    db: "{{ item.database }}"
+    priv: "ALL"
+    password: "{{ postgres_password }}"
+  sudo_user: "postgres"
+  with_items: discourse_multisite
+
+- name: "multisite - check if discourse user owns public schema"
+  command: >
+    /usr/bin/psql {{ item.database }} -c
+    "COPY (
+    SELECT schema_owner
+    FROM information_schema.schemata
+    WHERE schema_name='public'
+    ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
+  changed_when: False
+  sudo_user: "postgres"
+  with_items: discourse_multisite
+  register: public_schema_owner
+
+- name: "multisite - ALTER SCHEMA public OWNER TO discourse"
+  when: public_schema_owner is defined and item.0.stdout != "discourse"
+  command: >
+    /usr/bin/psql {{ item.1.database }} -c
+    "ALTER SCHEMA public OWNER TO discourse;"
+  sudo_user: "postgres"
+  with_together:
+    - public_schema_owner.results
+    - discourse_multisite
+
+- name: "multisite - check if database has extension hstore"
+  command: >
+    /usr/bin/psql {{ item.database }} -c
+    "COPY (
+    SELECT EXISTS ( SELECT 1 FROM pg_extension WHERE extname='hstore' )
+    ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
+  changed_when: False
+  sudo_user: "postgres"
+  with_items: discourse_multisite
+  register: discourse_hstore
+
+- name: "multisite - create extension hstore"
+  when: discourse_hstore is defined and item.0.stdout != "t"
+  command: >
+    /usr/bin/psql {{ item.1.database }} -c
+    "CREATE EXTENSION IF NOT EXISTS hstore;"
+  sudo_user: "postgres"
+  with_together:
+    - discourse_hstore.results
+    - discourse_multisite
+
+- name: "multisite - check if database has extension pg_trgm"
+  command: >
+    /usr/bin/psql {{ item.database }} -c
+    "COPY (
+    SELECT EXISTS ( SELECT 1 FROM pg_extension WHERE extname='pg_trgm' )
+    ) TO STDOUT;"
+  always_run: True
+  ignore_errors: True
+  changed_when: False
+  sudo_user: "postgres"
+  with_items: discourse_multisite
+  register: discourse_pg_trgm
+
+- name: "multisite - create extension pg_trgm"
+  when: discourse_pg_trgm is defined and item.0.stdout != "t"
+  command: >
+    /usr/bin/psql {{ item.1.database }} -c
+    "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
+  sudo_user: "postgres"
+  with_together:
+    - discourse_pg_trgm.results
+    - discourse_multisite
+

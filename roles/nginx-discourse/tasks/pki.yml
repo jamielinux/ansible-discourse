@@ -1,0 +1,47 @@
+---
+
+- name: "create /etc/pki/tls/discourse directory"
+  file:
+    dest: "/etc/pki/tls/discourse"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    state: "directory"
+
+- name: "create Diffie-Hellman parameter file"
+  command: "/usr/bin/openssl dhparam -out /etc/pki/tls/discourse/dh{{ tls_dhparam_size }}.pem {{ tls_dhparam_size }}"
+  args:
+    creates: "/etc/pki/tls/discourse/dh{{ tls_dhparam_size }}.pem"
+  notify:
+    - "nginx upgrade"
+
+- name: "install domain TLS key"
+  when: tls_enabled
+  template:
+    src: "tls_domain_key.j2"
+    dest: "/etc/pki/tls/discourse/{{ discourse_hostname }}.key.pem"
+    owner: "root"
+    group: "root"
+    mode: "0400"
+  notify:
+    - "nginx upgrade"
+
+- name: "install domain TLS certificate"
+  when: tls_enabled
+  copy:
+    src: "{{ tls_domain_cert }}"
+    dest: "/etc/pki/tls/discourse/{{ discourse_hostname }}.cert.pem"
+    owner: "root"
+    group: "root"
+    mode: "0444"
+  notify:
+    - "nginx upgrade"
+
+- name: "install certificate authority bundle"
+  when: tls_ocsp_stapling_enabled
+  copy:
+    src: "{{ tls_ca_bundle }}"
+    dest: "/etc/pki/tls/discourse/{{ discourse_hostname }}.ca-bundle.pem"
+  notify:
+    - "nginx upgrade"
+

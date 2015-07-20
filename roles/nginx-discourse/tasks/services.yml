@@ -1,0 +1,33 @@
+---
+
+- name: "create snippet directory for nginx.service"
+  file:
+    dest: "/etc/systemd/system/nginx.service.d"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    state: "directory"
+
+- name: "increase LimitNOFILE"
+  template:
+    src: "limits.conf.j2"
+    dest: "/etc/systemd/system/nginx.service.d/limits.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "systemctl daemon-reload"
+  command: "/bin/systemctl daemon-reload"
+  changed_when: False
+
+- name: "enable nginx"
+  service:
+    name: "nginx.service"
+    enabled: True
+
+- name: "start nginx"
+  service:
+    name: "nginx.service"
+    state: "started"
+  register: start_nginx
+

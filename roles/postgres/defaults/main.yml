@@ -1,0 +1,37 @@
+---
+
+# A comma-separated list of interfaces to listen on.
+# To listen on all interfaces: ["*"]
+postgres_listen:              ["127.0.0.1"]
+postgres_port:                "5432"
+
+# Allow only localhost to connect: []
+# Allow only specific IPs to connect: ["1.2.3.4/32", "5.6.7.8/32"]
+# Allow all remote hosts to connect: ["0.0.0.0/0"]
+postgres_hosts_allow:         []
+
+# If you have a dedicated postgres server, 25% of total RAM is a good starting
+# point. If running postgres on the same server as everything else, try 12.5%.
+postgres_shared_buffers:      "128MB"
+
+# 10MB per gigabyte of total RAM is a good starting point.
+postgres_work_mem:            "10MB"
+
+# These five options only affect database initialization.
+postgres_datestyle:           "iso, mdy"
+postgres_encoding:            "UTF8"
+postgres_locale:              "en_US.UTF-8"
+postgres_text_search_config:  "pg_catalog.english"
+postgres_timezone:            "UTC"
+
+postgres_max_connections:     "100"
+postgres_wal_level:           "minimal"
+postgres_max_wal_senders:     "0"
+postgres_checkpoint_segments: "10"
+postgres_logging_collector:   "on"
+postgres_log_min_duration_statement: "100"
+postgres_log_lock_waits:      "off"
+
+# Additional options to pass to pg_upgrade when performing database migrations.
+pg_upgrade_extra_opts:        ""
+

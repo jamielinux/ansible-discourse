@@ -1,6 +1,7 @@
 ---
 
 - name: "restart opendkim"
+  when: start_opendkim is not defined or not start_opendkim.changed
   service:
     name: "opendkim"
     state: "restarted"

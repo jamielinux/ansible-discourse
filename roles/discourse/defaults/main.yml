@@ -6,7 +6,7 @@ discourse_hostname:           "discourse.example.com"
 discourse_developer_emails:   ["hello@example.com"]
 
 # This can be any git commit hash, branch or tag.
-discourse_version:            "latest-release"
+discourse_version:            "stable"
 
 discourse_unicorn_workers:    "2"
 discourse_unicorn_sidekiqs:   "1"
@@ -38,4 +38,14 @@ discourse_cdn_url:            ""
 
 # Show output from bundle and rake commands.
 discourse_verbose:            True
+
+# Define plugins to install.
+# discourse_plugins:
+#   - name: "discourse-akismet"
+#     repo: "https://github.com/discourse/discourse-akismet.git"
+#     version: "HEAD"
+#
+#   - name: "discourse-spoiler-alert"
+#     repo: "https://github.com/discourse/discourse-spoiler-alert.git"
+#     version: "HEAD"
 
