@@ -135,6 +135,9 @@ be compiled again).
 Further configuration
 =====================
 
+* `customize the version of Ruby or Discourse to install
+  <docs/README.custom-versions.rst>`_
+
 * `enable HTTPS <docs/README.https.rst>`_
 
 * `run PostgreSQL (and/or Redis) on a separate server
