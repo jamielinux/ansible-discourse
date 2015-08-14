@@ -1,4 +1,11 @@
+Changes in version 1.0.1 - 2015-08-14
+
+    * Default to Ruby 2.0.0-p645 instead of Ruby 2.2.2 on advice from the
+      Discourse team due to performance regressions.
+
+
 Changes in version 1.0.0 - 2015-07-20
 
     * The first public version.
+
 
