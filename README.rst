@@ -76,7 +76,8 @@ You have two options:
   instructions.
 
 * BETTER: Install Ansible locally and `deploy to a remote server from your
-  local computer <docs/README.remote.rst>`_.
+  local computer <docs/README.remote.rst>`_. Make sure your remote server has
+  Python 2.x installed.
 
 Step 2: Configure playbook
 --------------------------

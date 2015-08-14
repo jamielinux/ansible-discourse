@@ -58,7 +58,8 @@ Edit the options in ``group_vars/all/main.yml``.
 Deploy
 ======
 
-Replace ``USERNAME`` with the remote user on your server.
+Replace ``USERNAME`` with the remote user on your server. Make sure your remote
+server has Python 2.x installed.
 
 .. code-block:: console
 
