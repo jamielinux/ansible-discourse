@@ -2,6 +2,6 @@ RAILS_ENV=production
 UNICORN_WORKERS={{ discourse_unicorn_workers }}
 UNICORN_SIDEKIQS={{ discourse_unicorn_sidekiqs }}
 RUBY_GC_MALLOC_LIMIT=40000000
-RUBY_GC_HEAP_INIT_SLOTS=800000
+RUBY_HEAP_MIN_SLOTS=800000
 DISCOURSE_DB_SOCKET=/var/run/postgresql
 LD_PRELOAD={{ libjemalloc }}
