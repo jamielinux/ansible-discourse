@@ -1,7 +1,7 @@
 ---
 
 rbenv_version:                "HEAD"
-rbenv_ruby_build_version:     "v20150803"
+rbenv_ruby_build_version:     "v20150818"
 
 # Where rbenv will be installed to.
 rbenv_home:                   "/home/{{ rbenv_user }}"
