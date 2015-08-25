@@ -192,7 +192,7 @@ server {
             break;
         }
 
-        location ~ ^/(letter_avatar|user_avatar|highlight-js|stylesheets) {
+        location ~ ^/(letter_avatar|user_avatar|highlight-js|stylesheets|favicon/proxied) {
             proxy_set_header Host $http_host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
