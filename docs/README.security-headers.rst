@@ -12,7 +12,7 @@ your site. Take care with single quotes and double quotes.
 
 .. code-block:: yaml
 
-    content_security_policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;"
+    content_security_policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self'; font-src 'self' data:;"
     response_headers:
       - 'X-UA-Compatible "IE=edge"'
       - 'X-Frame-Options DENY'
