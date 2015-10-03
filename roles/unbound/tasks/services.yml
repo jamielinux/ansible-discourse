@@ -25,10 +25,10 @@
   when: >
     ( unbound_conf is defined and unbound_conf.changed )
     or ( unbound_start.changed )
-  command: "/usr/bin/dig @localhost org. SOA +dnssec"
+  command: "/usr/bin/dig @localhost org. SOA +dnssec +noall +comments"
   register: dig_org
   changed_when: False
-  failed_when: "'status: NOERROR' not in dig_org.stdout"
+  failed_when: "' ad' not in dig_org.stdout"
 
 - name: "check DNSSEC resolution dnssec-failed.org"
   when: >
