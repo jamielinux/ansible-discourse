@@ -30,18 +30,6 @@
   changed_when: False
   failed_when: "'status: NOERROR' not in dig_org.stdout"
 
-# This test seems unreliable.
-#- name: "check DNSSEC resolution test.dnssec-or-not.net"
-#  when: >
-#    not unbound_use_caps_for_id
-#    and ( unbound_conf is defined and unbound_conf.changed )
-#    or ( unbound_start.changed )
-#  command: "/usr/bin/dig @localhost +short test.dnssec-or-not.net TXT"
-#  register: dig_dnssec_or_not
-#  changed_when: False
-#  failed_when: "'Yes, you are using DNSSEC' not in dig_dnssec_or_not.stdout"
-#  ignore_errors: True
-
 - name: "check DNSSEC resolution dnssec-failed.org"
   when: >
     ( unbound_conf is defined and unbound_conf.changed )
