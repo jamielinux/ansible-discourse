@@ -7,9 +7,8 @@ operating systems are supported <docs/README.operating-system-support.rst>`_,
 including CentOS, Debian, Fedora and Ubuntu. You don’t need any knowledge of
 Ansible (but it’s recommended).
 
-``ansible-discourse`` deploys a similar software stack to the `official
-Discourse Docker image`_, including PostgreSQL, Redis, NGINX and Ruby (via
-rbenv).
+``ansible-discourse`` deploys a similar software stack to the official Discourse
+Docker image, including PostgreSQL, Redis, NGINX and Ruby (via rbenv).
 
 Don’t report issues to ``meta.discourse.org``. Instead, `open a new issue
 here <https://discourse.jamielinux.com/c/ansible-discourse>`_.
@@ -30,7 +29,6 @@ Bonus features:
 * Don’t install pngout as it’s not free software.
 
 .. _Ansible: http://www.ansible.com
-.. _official Discourse Docker image: https://github.com/discourse/discourse_docker
 .. _Discourse: http://www.discourse.org/
 .. _Discourse application: https://github.com/discourse/discourse
 
@@ -55,13 +53,11 @@ Important notes
 ===============
 
 * I cannot provide any guarantees. If you need guaranteed uptime but aren’t an
-  experienced system administrator, consider purchasing `premium support from
-  Discourse.org`_.
+  experienced system administrator, consider purchasing premium support from
+  Discourse.org.
 
 * In some cases, `external package repositories are used
   <docs/README.operating-system-support.rst>`_.
-
-.. _premium support from Discourse.org: https://payments.discourse.org/buy/
 
 Quickstart
 ==========
