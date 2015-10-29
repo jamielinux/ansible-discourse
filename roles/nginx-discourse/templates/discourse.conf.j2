@@ -29,6 +29,7 @@ limit_req_status 429;
 server {
     server_name {{ discourse_hostname }};
     listen 80;
+    listen [::]:80;
 
 {% for header in response_headers %}
     add_header {{ header }};
@@ -43,13 +44,15 @@ server {
 {% if tls_enabled %}
 {% if spdy_enabled %}
     listen 443 ssl spdy;
+    listen [::]:443 ssl spdy;
     spdy_keepalive_timeout {{ nginx_spdy_keepalive_timeout }};
     spdy_headers_comp {{ nginx_spdy_headers_comp }};
 {% else %}
     listen 443 ssl;
+    listen [::]:443 ssl;
 {% endif %}
 {% else %}
-    listen 80;
+    listen [::]:80;
 {% endif %}
 
     access_log /var/log/nginx/access.log log_discourse buffer=16k;
