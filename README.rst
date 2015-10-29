@@ -11,6 +11,9 @@ Ansible (but it’s recommended).
 Discourse Docker image`_, including PostgreSQL, Redis, NGINX and Ruby (via
 rbenv).
 
+Don’t report issues to ``meta.discourse.org``. Instead, `open a new issue
+here <https://discourse.jamielinux.com/c/ansible-discourse>`_.
+
 Bonus features:
 
 * Integrate with **systemd** for service management and isolation.
@@ -51,9 +54,6 @@ may suit you if:
 Important notes
 ===============
 
-* Please don’t report issues to ``meta.discourse.org``. Instead, `open a topic
-  here`_.
-
 * I cannot provide any guarantees. If you need guaranteed uptime but aren’t an
   experienced system administrator, consider purchasing `premium support from
   Discourse.org`_.
@@ -61,7 +61,6 @@ Important notes
 * In some cases, `external package repositories are used
   <docs/README.operating-system-support.rst>`_.
 
-.. _open a topic here: https://discourse.jamielinux.com/c/ansible-discourse
 .. _premium support from Discourse.org: https://payments.discourse.org/buy/
 
 Quickstart
