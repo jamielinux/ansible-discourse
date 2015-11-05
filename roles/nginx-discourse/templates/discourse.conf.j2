@@ -93,6 +93,7 @@ server {
     ssl_stapling_verify on;
     ssl_trusted_certificate /etc/pki/tls/discourse/{{ discourse_hostname }}.ca-bundle.pem;
     resolver {{ nginx_resolver }};
+    resolver_timeout 5s;
 {% endif %}
 {% endif %}
 
