@@ -1,3 +1,8 @@
+Changes in version 1.0.5 - 2015-11-05
+
+    * Add missing NGINX 'listen' directive when SSL is disabled
+
+
 Changes in version 1.0.4 - 2015-10-29
 
     * Add missing NGINX 'listen' directive for IPv6
