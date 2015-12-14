@@ -1,3 +1,8 @@
+Changes in version 1.0.7 - 2015-12-14
+
+    * Add missing conditionals
+
+
 Changes in version 1.0.6 - 2015-12-14
 
     * Add nginx_resolver_timeout variable
