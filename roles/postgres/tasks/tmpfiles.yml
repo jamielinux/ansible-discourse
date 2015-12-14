@@ -15,7 +15,7 @@
     group: "postgres"
     mode: "0755"
     state: "directory"
-    seuser: "staff_u"
+    seuser: "system_u"
     serole: "object_r"
     setype: "postgresql_var_run_t"
     selevel: "s0"
