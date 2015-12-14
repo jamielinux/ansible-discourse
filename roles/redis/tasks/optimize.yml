@@ -35,10 +35,12 @@
     mode: "0644"
 
 - name: "systemctl daemon-reload"
+  when: disable_transparent_huge_pages
   command: "/bin/systemctl daemon-reload"
   changed_when: False
 
 - name: "enable and start disable-transparent-huge-pages"
+  when: disable_transparent_huge_pages
   service:
     name: "disable-transparent-huge-pages"
     enabled: True
