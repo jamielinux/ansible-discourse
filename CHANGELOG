@@ -1,3 +1,12 @@
+Changes in version 1.0.6 - 2015-12-14
+
+    * Add nginx_resolver_timeout variable
+
+    * Add disable_transparent_huge_pages variable
+
+    * Add nginx_set_real_ip_from variable
+
+
 Changes in version 1.0.5 - 2015-11-05
 
     * Add missing NGINX 'listen' directive when SSL is disabled
@@ -28,6 +37,6 @@ Changes in version 1.0.1 - 2015-08-14
 
 Changes in version 1.0.0 - 2015-07-20
 
-    * The first public version.
+    * The first public version
 
 
