@@ -24,8 +24,9 @@
 # When running redis, it's recommended to disable transparent huge pages.
 # The best way to disable it is to append "transparent_hugepage: never" to
 # the kernel cmdline, but there isn't a robust way to do that with Ansible
-# so instead we"ll run a boot script.
+# so instead we'll run a boot script.
 - name: "disable transparent huge pages"
+  when: disable_transparent_huge_pages
   copy:
     src: "disable-transparent-huge-pages.service"
     dest: "/etc/systemd/system/disable-transparent-huge-pages.service"

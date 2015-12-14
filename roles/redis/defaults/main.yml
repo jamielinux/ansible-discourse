@@ -4,3 +4,7 @@ redis_bind:                   "127.0.0.1"
 redis_port:                   "6379"
 redis_tcp_backlog:            "511"
 
+# When running redis, it's recommended to disable transparent huge pages.
+# However, in some cases this may not be possible.
+disable_transparent_huge_pages: True
+
