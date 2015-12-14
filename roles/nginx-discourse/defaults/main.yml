@@ -64,6 +64,7 @@ nginx_spdy_headers_comp:      "6"
 tls_ocsp_stapling_enabled:    False
 tls_ca_bundle:                "files/pki/ExampleCA.bundle.pem"
 nginx_resolver:               "127.0.0.1"
+nginx_resolver_timeout:       "5s"
 
 # https://wiki.mozilla.org/Security/Server_Side_TLS
 tls_protocols:                "TLSv1 TLSv1.1 TLSv1.2"
