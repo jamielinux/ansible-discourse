@@ -57,6 +57,14 @@
     setype: "var_log_t"
     selevel: "s0"
 
+- name: "create /var/www/discourse/plugins directory"
+  file:
+    dest: "/var/www/discourse/plugins"
+    owner: "discourse"
+    group: "discourse"
+    mode: "0755"
+    state: "directory"
+
 - name: "create /var/www/discourse/public/backups directory"
   file:
     dest: "/var/www/discourse/public/backups"
