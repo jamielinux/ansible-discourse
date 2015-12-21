@@ -209,7 +209,7 @@ server {
             break;
         }
 
-        location ~ ^/(letter_avatar|user_avatar|highlight-js|stylesheets|favicon/proxied) {
+        location ~ ^/(letter_avatar/|user_avatar|highlight-js|stylesheets|favicon/proxied) {
             proxy_set_header Host $http_host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -223,6 +223,24 @@ server {
             proxy_cache_valid any 1m;
             proxy_pass http://discourse;
             break;
+        }
+
+        location /letter_avatar_proxy/ {
+          # Don't sent client headers to avatars.discourse.org.
+          proxy_method GET;
+          proxy_pass_request_headers off;
+          proxy_pass_request_body off;
+
+          # Ignore cookies.
+          proxy_ignore_headers "Set-Cookie";
+          proxy_hide_header "Set-Cookie";
+
+          proxy_cache one;
+          proxy_cache_key $uri;
+          proxy_cache_valid 200 7d;
+          proxy_cache_valid 404 1m;
+
+          proxy_pass https://avatars.discourse.org/;
         }
 
         # This means every file in public is tried first.
