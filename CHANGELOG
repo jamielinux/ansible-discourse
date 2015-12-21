@@ -1,3 +1,14 @@
+Changes in version 1.0.8 - 2015-12-21
+
+    * Proxy letter avatars to avatars.discourse.org
+
+    * Bump version of Ruby to 2.0.0-p648
+
+    * Update TLS ciphers
+
+    * Return 204 for favicon.ico
+
+
 Changes in version 1.0.7 - 2015-12-14
 
     * Add missing conditionals
