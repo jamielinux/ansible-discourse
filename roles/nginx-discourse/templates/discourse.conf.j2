@@ -118,6 +118,10 @@ server {
         internal;
     }
 
+    location /favicon.ico {
+      return 204;
+    }
+
     location / {
         root $public;
         add_header ETag "";
