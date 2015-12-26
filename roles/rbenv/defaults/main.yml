@@ -1,6 +1,6 @@
 ---
 
-rbenv_version:                "HEAD"
+rbenv_version:                "v1.0.0"
 rbenv_ruby_build_version:     "v20151216"
 
 # Where rbenv will be installed to.
