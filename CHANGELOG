@@ -1,3 +1,10 @@
+Changes in version 1.0.9 - 2015-12-26
+
+    * Use rbenv v1.0.0 tag instead of HEAD
+
+    * Do not log favicon.ico requests
+
+
 Changes in version 1.0.8 - 2015-12-21
 
     * Proxy letter avatars to avatars.discourse.org
